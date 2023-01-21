@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using EventStreamingPlatform.Data;
 using EventStreamingPlatform.Models;
 using EventStreamingPlatform.Models.StreamingViewModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -20,7 +21,7 @@ namespace EventStreamingPlatform.Controllers
         {
             var viewModel = new FilmIndexData();
             viewModel.Films = await _context.Films
-                  
+                  .Include(c=>c.Company)
                   .Include(i => i.FilmGenres)
                     .ThenInclude(i => i.Genre)
                         .ThenInclude(i => i.Recomandation)
@@ -56,6 +57,7 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var film = await _context.Films
+                .Include(c=>c.Company)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (film == null)
             {
@@ -70,6 +72,7 @@ namespace EventStreamingPlatform.Controllers
         {
             var film = new Film();
             film.FilmGenres = new List<FilmGenre>();
+            PopulateCompnayDropDownList();
             PopulateAssignedGenreData(film);
             return View();
         }
@@ -77,7 +80,7 @@ namespace EventStreamingPlatform.Controllers
         // POST: Films/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title")] Film film, string[] selectedGenres)
+        public async Task<IActionResult> Create([Bind("Title, CompanyId")] Film film, string[] selectedGenres)
         {
             if (selectedGenres != null)
             {
@@ -94,6 +97,7 @@ namespace EventStreamingPlatform.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            PopulateCompnayDropDownList(film.CompanyId);
             PopulateAssignedGenreData(film);
             return View(film);
         }
@@ -116,6 +120,7 @@ namespace EventStreamingPlatform.Controllers
             {
                 return NotFound();
             }
+            PopulateCompnayDropDownList(film.CompanyId);
             PopulateAssignedGenreData(film);
             return View(film);
         }
@@ -158,7 +163,7 @@ namespace EventStreamingPlatform.Controllers
             if (await TryUpdateModelAsync<Film>(
                 filmToUpdate,
                 "",
-                i => i.Title))
+                i => i.Title, c => c.CompanyId))
             {
 
                 UpdateFilmGenre(selectedGenres, filmToUpdate);
@@ -175,9 +180,18 @@ namespace EventStreamingPlatform.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            PopulateCompnayDropDownList(filmToUpdate.CompanyId);
             UpdateFilmGenre(selectedGenres, filmToUpdate);
             PopulateAssignedGenreData(filmToUpdate);
             return View(filmToUpdate);
+        }
+
+        private void PopulateCompnayDropDownList(object selectedCompany = null)
+        {
+            var companyQuery = from d in _context.Companies
+                                      orderby d.CompanyName
+                                      select d;
+            ViewBag.CompanyId = new SelectList(companyQuery.AsNoTracking(), "CompanyId", "CompanyName", selectedCompany);
         }
 
         private void UpdateFilmGenre(string[] selectedGenres, Film filmToUpdate)
@@ -220,6 +234,8 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var film = await _context.Films
+                .Include(c => c.Company)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (film == null)
             {

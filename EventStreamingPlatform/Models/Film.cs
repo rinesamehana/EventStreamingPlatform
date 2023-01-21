@@ -11,7 +11,9 @@ namespace EventStreamingPlatform.Models
 
         public string Title { get; set; }
 
-        
+        public int? CompanyId { get; set; }
+
+        public Company Company { get; set; }
         public ICollection<FilmGenre> FilmGenres { get; set; }
   
     }

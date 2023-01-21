@@ -14,12 +14,15 @@ namespace EventStreamingPlatform.Data
 
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Recomandation> Recomandations { get; set; }
+
+        public DbSet<Company> Companies { get; set; }
         public DbSet<FilmGenre> FilmGenres { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Genre>().ToTable("Genre");
+            modelBuilder.Entity<Company>().ToTable("Company");
             modelBuilder.Entity<Recomandation>().ToTable("Recomandation");
             modelBuilder.Entity<Film>().ToTable("Film");
             modelBuilder.Entity<FilmGenre>().ToTable("FilmGenres");
