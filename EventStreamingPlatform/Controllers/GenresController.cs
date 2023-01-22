@@ -20,12 +20,62 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Genres
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,
+             string currentFilter,
+             string searchString,
+             int? pageNumber)
         {
-            var genres = _context.Genres
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
+           
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+
+            }
+
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var genres = from a in _context.Genres select a;
+
+            genres= _context.Genres
                 .Include(c => c.Recomandation)
                 .AsNoTracking();
-            return View(await genres.ToListAsync());
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                genres = genres.Where(a => a.Name.Contains(searchString) );
+            }
+
+            switch (sortOrder)
+            {
+                case "nameDesc":
+                    genres = genres.OrderByDescending(a => a.Name);
+                    break;
+
+               
+
+                default:
+                    genres = genres.OrderBy(a => a.Name);
+                    break;
+            }
+
+            
+
+
+          
+
+            int pageSize = 3;
+            return View(await PaginatedList<Genre>.CreateAsync(genres.AsNoTracking(), pageNumber ?? 1, pageSize));
+
+
+            //return View(await genres.ToListAsync());
         }
 
         // GET: Genres/Details/5
