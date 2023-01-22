@@ -16,7 +16,7 @@ namespace EventStreamingPlatform.Data
         public DbSet<Recomandation> Recomandations { get; set; }
 
         public DbSet<Company> Companies { get; set; }
-
+        public DbSet<Language> Languages { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<FilmGenre> FilmGenres { get; set; }
@@ -30,7 +30,8 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<Company>().ToTable("Company");
             modelBuilder.Entity<Actor>().ToTable("Actor");
             modelBuilder.Entity<Recomandation>().ToTable("Recomandation");
-            modelBuilder.Entity<Gender>().ToTable("Genders");
+            modelBuilder.Entity<Gender>().ToTable("Gender");
+            modelBuilder.Entity<Language>().ToTable("Language");
             modelBuilder.Entity<Film>().ToTable("Film");
             modelBuilder.Entity<FilmGenre>().ToTable("FilmGenres");
             modelBuilder.Entity<FilmGenre>()
@@ -39,6 +40,8 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<FilmActor>()
                 .HasKey(c => new { c.FilmId, c.ActorId });
         }
+
+        public DbSet<EventStreamingPlatform.Models.Language> Language { get; set; }
 
     }
 }

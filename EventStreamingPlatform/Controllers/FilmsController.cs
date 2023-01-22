@@ -22,7 +22,7 @@ namespace EventStreamingPlatform.Controllers
             var viewModel = new FilmIndexData();
             viewModel.Films = await _context.Films
                   .Include(c=>c.Company)
-                  
+                  .Include(c=>c.Language)
                   .Include(i => i.FilmGenres)
                     .ThenInclude(i => i.Genre)
                         .ThenInclude(i => i.Recomandation)
@@ -68,6 +68,7 @@ namespace EventStreamingPlatform.Controllers
 
             var film = await _context.Films
                 .Include(c=>c.Company)
+                 .Include(c => c.Language)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (film == null)
             {
@@ -84,6 +85,7 @@ namespace EventStreamingPlatform.Controllers
             film.FilmGenres = new List<FilmGenre>();
             film.FilmActors = new List<FilmActor>();
             PopulateCompnayDropDownList();
+            PopulateLanguageDropDownList();
             PopulateAssignedGenreData(film);
             PopulateAssignedActorData(film);
             return View();
@@ -92,7 +94,7 @@ namespace EventStreamingPlatform.Controllers
         // POST: Films/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title, CompanyId")] Film film, string[] selectedGenres, string[] selectedActors)
+        public async Task<IActionResult> Create([Bind("Title, CompanyId, LanguageId")] Film film, string[] selectedGenres, string[] selectedActors)
         {
             if (selectedGenres != null)
             {
@@ -118,6 +120,7 @@ namespace EventStreamingPlatform.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            PopulateLanguageDropDownList(film.LanguageId);
             PopulateCompnayDropDownList(film.CompanyId);
             PopulateAssignedGenreData(film);
             PopulateAssignedActorData(film);
@@ -142,6 +145,7 @@ namespace EventStreamingPlatform.Controllers
             {
                 return NotFound();
             }
+            PopulateLanguageDropDownList(film.LanguageId);
             PopulateCompnayDropDownList(film.CompanyId);
             PopulateAssignedGenreData(film);
             PopulateAssignedActorData(film);
@@ -204,7 +208,7 @@ namespace EventStreamingPlatform.Controllers
             if (await TryUpdateModelAsync<Film>(
                 filmToUpdate,
                 "",
-                i => i.Title, c => c.CompanyId))
+                i => i.Title, c => c.CompanyId, c => c.LanguageId))
             {
 
                 UpdateFilmGenre(selectedGenres, selectedActors,filmToUpdate);
@@ -221,6 +225,7 @@ namespace EventStreamingPlatform.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            PopulateLanguageDropDownList(filmToUpdate.LanguageId);
             PopulateCompnayDropDownList(filmToUpdate.CompanyId);
             UpdateFilmGenre(selectedGenres, selectedActors, filmToUpdate);
             PopulateAssignedGenreData(filmToUpdate);
@@ -233,6 +238,14 @@ namespace EventStreamingPlatform.Controllers
                                       orderby d.CompanyName
                                       select d;
             ViewBag.CompanyId = new SelectList(companyQuery.AsNoTracking(), "CompanyId", "CompanyName", selectedCompany);
+        }
+
+        private void PopulateLanguageDropDownList(object selectedLanguage = null)
+        {
+            var languageQuery = from d in _context.Languages
+                               orderby d.Name
+                               select d;
+            ViewBag.LanguageId = new SelectList(languageQuery.AsNoTracking(), "LanguageId", "Name", selectedLanguage);
         }
 
         private void UpdateFilmGenre(string[] selectedGenres, string[] selectedActors, Film filmToUpdate)
@@ -295,6 +308,7 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var film = await _context.Films
+                .Include(c => c.Language)
                 .Include(c => c.Company)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
