@@ -10,6 +10,9 @@
 
         public int Age { get; set; }
 
+        public int? GenderId { get; set; }
+
+        public Gender Gender { get; set; }
 
         public ICollection<FilmActor> FilmActors { get; set; }
     }

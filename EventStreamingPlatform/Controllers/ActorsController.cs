@@ -20,9 +20,62 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Actors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
-              return View(await _context.Actors.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
+
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+
+            }
+
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var actors = from a in _context.Actors select a;
+
+            actors = _context.Actors
+                .Include(c => c.Gender)
+                .AsNoTracking();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                actors = actors.Where(a => a.Name.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "nameDesc":
+                    actors = actors.OrderByDescending(a => a.Name);
+                    break;
+
+
+
+                default:
+                    actors = actors.OrderBy(a => a.Name);
+                    break;
+            }
+
+
+
+
+
+
+            int pageSize = 3;
+            return View(await PaginatedList<Actor>.CreateAsync(actors.AsNoTracking(), pageNumber ?? 1, pageSize));
+
+
+            //return View(await genres.ToListAsync());
         }
 
         // GET: Actors/Details/5
@@ -34,6 +87,7 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var actor = await _context.Actors
+                .Include(i=>i.Gender)
                 .FirstOrDefaultAsync(m => m.ActorId == id);
             if (actor == null)
             {
@@ -46,6 +100,7 @@ namespace EventStreamingPlatform.Controllers
         // GET: Actors/Create
         public IActionResult Create()
         {
+            PopulateGenderDropDownList();
             return View();
         }
 
@@ -54,7 +109,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ActorId,Name,LastName,Age")] Actor actor)
+        public async Task<IActionResult> Create([Bind("ActorId,Name,LastName,Age, GenderId")] Actor actor)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +117,7 @@ namespace EventStreamingPlatform.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            PopulateGenderDropDownList(actor.GenderId);
             return View(actor);
         }
 
@@ -78,42 +134,52 @@ namespace EventStreamingPlatform.Controllers
             {
                 return NotFound();
             }
+            PopulateGenderDropDownList(actor.GenderId);
             return View(actor);
         }
 
         // POST: Actors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ActorId,Name,LastName,Age")] Actor actor)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != actor.ActorId)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var actorToUpdate = await _context.Actors
+                .FirstOrDefaultAsync(c => c.ActorId == id);
+
+            if (await TryUpdateModelAsync<Actor>(actorToUpdate,
+                "",
+                c => c.Name, c=>c.LastName , c => c.Age, c => c.GenderId))
             {
                 try
                 {
-                    _context.Update(actor);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!ActorExists(actor.ActorId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(actor);
+            PopulateGenderDropDownList(actorToUpdate.GenderId);
+            return View(actorToUpdate);
+        }
+
+        private void PopulateGenderDropDownList(object selectedGender = null)
+        {
+            var gendersQuery = from d in _context.Genders
+                                      orderby d.Name
+                                      select d;
+            ViewBag.GenderId = new SelectList(gendersQuery.AsNoTracking(), "GenderId", "Name", selectedGender);
         }
 
         // GET: Actors/Delete/5
@@ -125,6 +191,7 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var actor = await _context.Actors
+                .Include(c => c.Gender)
                 .FirstOrDefaultAsync(m => m.ActorId == id);
             if (actor == null)
             {

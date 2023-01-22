@@ -16,6 +16,8 @@ namespace EventStreamingPlatform.Data
         public DbSet<Recomandation> Recomandations { get; set; }
 
         public DbSet<Company> Companies { get; set; }
+
+        public DbSet<Gender> Genders { get; set; }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<FilmGenre> FilmGenres { get; set; }
 
@@ -28,6 +30,7 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<Company>().ToTable("Company");
             modelBuilder.Entity<Actor>().ToTable("Actor");
             modelBuilder.Entity<Recomandation>().ToTable("Recomandation");
+            modelBuilder.Entity<Gender>().ToTable("Genders");
             modelBuilder.Entity<Film>().ToTable("Film");
             modelBuilder.Entity<FilmGenre>().ToTable("FilmGenres");
             modelBuilder.Entity<FilmGenre>()
