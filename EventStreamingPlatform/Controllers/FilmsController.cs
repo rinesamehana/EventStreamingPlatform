@@ -17,14 +17,17 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Films
-        public async Task<IActionResult> Index(int? id, int? genreId)
+        public async Task<IActionResult> Index(int? id, int? genreId, int? actorId)
         {
             var viewModel = new FilmIndexData();
             viewModel.Films = await _context.Films
                   .Include(c=>c.Company)
+                  
                   .Include(i => i.FilmGenres)
                     .ThenInclude(i => i.Genre)
                         .ThenInclude(i => i.Recomandation)
+                    .Include(c => c.FilmActors)
+                        .ThenInclude(i=>i.Actor)
                   .OrderBy(i => i.Title)
                   .ToListAsync();
 
@@ -43,6 +46,13 @@ namespace EventStreamingPlatform.Controllers
                 var selectedGenre = viewModel.Genres.Where(x => x.GenreId == genreId).Single();
                 ViewData["Genre"] = selectedGenre.Name;
                 
+            }
+            if (actorId != null)
+            {
+                ViewData["ActorId"] = actorId.Value;
+                var selectedActor = viewModel.Actors.Where(x => x.ActorId == actorId).Single();
+                ViewData["Actor"] = selectedActor.Name;
+
             }
 
             return View(viewModel);
@@ -72,15 +82,17 @@ namespace EventStreamingPlatform.Controllers
         {
             var film = new Film();
             film.FilmGenres = new List<FilmGenre>();
+            film.FilmActors = new List<FilmActor>();
             PopulateCompnayDropDownList();
             PopulateAssignedGenreData(film);
+            PopulateAssignedActorData(film);
             return View();
         }
 
         // POST: Films/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title, CompanyId")] Film film, string[] selectedGenres)
+        public async Task<IActionResult> Create([Bind("Title, CompanyId")] Film film, string[] selectedGenres, string[] selectedActors)
         {
             if (selectedGenres != null)
             {
@@ -91,6 +103,15 @@ namespace EventStreamingPlatform.Controllers
                     film.FilmGenres.Add(genreToAdd);
                 }
             }
+            if (selectedActors != null)
+            {
+                film.FilmActors = new List<FilmActor>();
+                foreach (var actor in selectedActors)
+                {
+                    var actorToAdd = new FilmActor { FilmId = film.ID, ActorId = int.Parse(actor) };
+                    film.FilmActors.Add(actorToAdd);
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(film);
@@ -99,6 +120,7 @@ namespace EventStreamingPlatform.Controllers
             }
             PopulateCompnayDropDownList(film.CompanyId);
             PopulateAssignedGenreData(film);
+            PopulateAssignedActorData(film);
             return View(film);
         }
 
@@ -111,7 +133,7 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var film = await _context.Films
-                
+                .Include(i=>i.FilmActors).ThenInclude(i=>i.Actor)
                 .Include(i=>i.FilmGenres).ThenInclude(i=>i.Genre)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
@@ -122,6 +144,7 @@ namespace EventStreamingPlatform.Controllers
             }
             PopulateCompnayDropDownList(film.CompanyId);
             PopulateAssignedGenreData(film);
+            PopulateAssignedActorData(film);
             return View(film);
         }
 
@@ -141,13 +164,30 @@ namespace EventStreamingPlatform.Controllers
             }
             ViewData["Genres"] = viewModel;
         }
+        private void PopulateAssignedActorData(Film film)
+        {
+            var allActors = _context.Actors;
+            var filmGenres = new HashSet<int>(film.FilmGenres.Select(c => c.GenreId));
+            var filmActors = new HashSet<int>(film.FilmActors.Select(c => c.ActorId));
+            var viewModel = new List<AssignedActorData>();
+            foreach (var actor in allActors)
+            {
+                viewModel.Add(new AssignedActorData
+                {
+                    ActorId = actor.ActorId,
+                    Name = actor.Name,
+                    Assigned = filmActors.Contains(actor.ActorId)
+                });
+            }
+            ViewData["Actors"] = viewModel;
+        }
 
         // POST: Films/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, string[] selectedGenres)
+        public async Task<IActionResult> Edit(int? id, string[] selectedGenres, string[] selectedActors)
         {
             if (id == null)
             {
@@ -155,7 +195,8 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var filmToUpdate = await _context.Films
-                
+                .Include(i=>i.FilmActors)
+                .ThenInclude(i=>i.Actor)
                 .Include(i => i.FilmGenres)
                     .ThenInclude(i => i.Genre)
                 .FirstOrDefaultAsync(m => m.ID == id);
@@ -166,7 +207,7 @@ namespace EventStreamingPlatform.Controllers
                 i => i.Title, c => c.CompanyId))
             {
 
-                UpdateFilmGenre(selectedGenres, filmToUpdate);
+                UpdateFilmGenre(selectedGenres, selectedActors,filmToUpdate);
                 try
                 {
                     await _context.SaveChangesAsync();
@@ -181,7 +222,7 @@ namespace EventStreamingPlatform.Controllers
                 return RedirectToAction(nameof(Index));
             }
             PopulateCompnayDropDownList(filmToUpdate.CompanyId);
-            UpdateFilmGenre(selectedGenres, filmToUpdate);
+            UpdateFilmGenre(selectedGenres, selectedActors, filmToUpdate);
             PopulateAssignedGenreData(filmToUpdate);
             return View(filmToUpdate);
         }
@@ -194,20 +235,22 @@ namespace EventStreamingPlatform.Controllers
             ViewBag.CompanyId = new SelectList(companyQuery.AsNoTracking(), "CompanyId", "CompanyName", selectedCompany);
         }
 
-        private void UpdateFilmGenre(string[] selectedGenres, Film filmToUpdate)
+        private void UpdateFilmGenre(string[] selectedGenres, string[] selectedActors, Film filmToUpdate)
         {
-            if (selectedGenres == null)
+            if (selectedGenres == null || selectedActors==null)
             {
                 filmToUpdate.FilmGenres = new List<FilmGenre>();
+                filmToUpdate.FilmActors = new List<FilmActor>();
                 return;
             }
 
             var selectedGenresHS = new HashSet<string>(selectedGenres);
+            var selectedActorsHS = new HashSet<string>(selectedActors);
             var filmGenres = new HashSet<int>(filmToUpdate.FilmGenres.Select(c => c.Genre.GenreId));
-
+            var filmActors = new HashSet<int>(filmToUpdate.FilmActors.Select(c => c.Actor.ActorId));
             foreach (var genre in _context.Genres)
             {
-                if (selectedGenresHS.Contains(genre.GenreId.ToString()))
+                if (selectedGenresHS.Contains(genre.GenreId.ToString()) )
                 {
                     if (!filmGenres.Contains(genre.GenreId))
                     {
@@ -220,6 +263,24 @@ namespace EventStreamingPlatform.Controllers
                     {
                         FilmGenre genreToRemove = filmToUpdate.FilmGenres.FirstOrDefault(i => i.GenreId == genre.GenreId);
                         _context.Remove(genreToRemove);
+                    }
+                }
+            }
+            foreach (var actor in _context.Actors)
+            {
+                if (selectedActorsHS.Contains(actor.ActorId.ToString()))
+                {
+                    if (!filmActors.Contains(actor.ActorId))
+                    {
+                        filmToUpdate.FilmActors.Add(new FilmActor { FilmId = filmToUpdate.ID, ActorId = actor.ActorId });
+                    }
+                }
+                else
+                {
+                    if (filmActors.Contains(actor.ActorId))
+                    {
+                        FilmActor actorToRemove = filmToUpdate.FilmActors.FirstOrDefault(i => i.ActorId == actor.ActorId);
+                        _context.Remove(actorToRemove);
                     }
                 }
             }
@@ -252,6 +313,7 @@ namespace EventStreamingPlatform.Controllers
         {
             Film film = await _context.Films
                 .Include(i => i.FilmGenres)
+                .Include(i=>i.FilmActors)
                 .SingleAsync(i => i.ID == id);
 
             var recomandations = await _context.Recomandations

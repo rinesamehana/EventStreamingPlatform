@@ -1,7 +1,7 @@
 ﻿@model EventStreamingPlatform.Models.StreamingViewModel.FilmIndexData
 
 @{
-    ViewData["Title"] = "Instructors";
+    ViewData["Title"] = "Films";
 }
 
 <h2>Films</h2>
@@ -15,7 +15,7 @@
             <th>Title</th>
             <th>Company</th>
             <th>Genres</th>
-        
+            <th>Actors</th>
             <th></th>
         </tr>
     </thead>
@@ -39,6 +39,12 @@
                     @foreach (var genre in item.FilmGenres)
                     {
                         @genre.Genre.GenreId <t /> @genre.Genre.Name <br />
+                    }
+                </td>
+                <td>
+                    @foreach (var actor in item.FilmActors)
+                    {
+                        @actor.Actor.ActorId <t /> @actor.Actor.Name <br />
                     }
                 </td>
                 <td>

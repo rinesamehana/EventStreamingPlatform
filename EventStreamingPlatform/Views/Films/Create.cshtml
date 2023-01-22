@@ -52,6 +52,33 @@
                 </div>
             </div>
             <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <table>
+                        <tr>
+                            @{
+                                int cntt = 0;
+                                List<EventStreamingPlatform.Models.StreamingViewModel.AssignedActorData> actors = ViewBag.Actors;
+
+                                foreach (var actor in actors)
+                                {
+                                    if (cntt++ % 4 == 0)
+                                    {
+                                        @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedActors"
+                                               value="@actor.ActorId"
+                                               @(Html.Raw(actor.Assigned ? "checked=\"checked\"" : "")) />
+                                               @actor.ActorId @:  @actor.Name
+                                        @:</td>
+                                }
+                                @:</tr>
+                            }
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

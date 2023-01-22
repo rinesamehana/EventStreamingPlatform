@@ -1,14 +1,13 @@
 ﻿namespace EventStreamingPlatform.Models
 {
-    public class FilmGenre
+    public class FilmActor
     {
         public int FilmId { get; set; }
-        public int GenreId { get; set; }
 
-   
+        public int ActorId { get; set; }
         public Film Film { get; set; }
 
+        public Actor Actor { get; set; }
    
-        public Genre Genre { get; set; }
     }
 }
