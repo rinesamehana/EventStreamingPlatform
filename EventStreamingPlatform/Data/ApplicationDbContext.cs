@@ -39,9 +39,29 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<FilmActor>().ToTable("FilmActors");
             modelBuilder.Entity<FilmActor>()
                 .HasKey(c => new { c.FilmId, c.ActorId });
+
+            modelBuilder.Entity<Film>()
+       .HasOne(i => i.Company)
+       .WithMany(c => c.Films)
+       .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Actor>()
+     .HasOne(i => i.Gender)
+     .WithMany(c => c.Actor)
+     .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Film>()
+       .HasOne(i => i.Language)
+       .WithMany(c => c.Film)
+       .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Genre>()
+       .HasOne(i => i.Recomandation)
+       .WithMany(c => c.Genres)
+       .OnDelete(DeleteBehavior.SetNull);
         }
 
-        public DbSet<EventStreamingPlatform.Models.Language> Language { get; set; }
+
 
     }
 }

@@ -15,7 +15,7 @@ namespace EventStreamingPlatform.Models
 
   
 
-        public int RecomandationId { get; set; }
+        public int? RecomandationId { get; set; }
 
         public Recomandation Recomandation { get; set; }
       
