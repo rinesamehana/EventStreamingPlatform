@@ -20,9 +20,61 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Languages
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,
+             string currentFilter,
+             string searchString,
+             int? pageNumber)
         {
-              return View(await _context.Languages.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
+            ViewData["IsocodeSortParam"] = sortOrder == "isocode" ? "isocodeDesc" : "isocode";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+
+            }
+
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var languages = from a in _context.Languages select a;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                languages = languages.Where(a => a.Name.Contains(searchString) || a.ISO_Code.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "nameDesc":
+                    languages = languages.OrderByDescending(a => a.Name);
+                    break;
+
+                case "isocode":
+                    languages = languages.OrderBy(a => a.ISO_Code);
+                    break;
+
+                case "surnameDesc":
+                    languages = languages.OrderByDescending(a => a.ISO_Code);
+                    break;
+
+                default:
+                    languages = languages.OrderBy(a => a.Name);
+                    break;
+            }
+
+            int pageSize = 3;
+            return View(await PaginatedList<Language>.CreateAsync(languages.AsNoTracking(), pageNumber ?? 1, pageSize)); ;
+
+
+
+
+            //return View(await _context.Languages.ToListAsync());
         }
 
         // GET: Languages/Details/5

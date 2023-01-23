@@ -20,9 +20,56 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Genders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index
+            (string sortOrder,
+             string currentFilter,
+             string searchString,
+             int? pageNumber)
         {
-              return View(await _context.Genders.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
+            ViewData["SurnameSortParam"] = sortOrder == "surname" ? "surnameDesc" : "surname";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+
+            }
+
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var genders = from a in _context.Genders select a;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+               genders = genders.Where(a => a.Name.Contains(searchString) );
+            }
+
+            switch (sortOrder)
+            {
+                case "nameDesc":
+                   genders = genders.OrderByDescending(a => a.Name);
+                    break;
+
+                
+
+                default:
+                    genders = genders.OrderBy(a => a.Name);
+                    break;
+            }
+
+            int pageSize = 3;
+            return View(await PaginatedList<Gender>.CreateAsync(genders.AsNoTracking(), pageNumber ?? 1, pageSize)); ;
+
+
+
+
+            //return View(await _context.Genders.ToListAsync());
         }
 
         // GET: Genders/Details/5
