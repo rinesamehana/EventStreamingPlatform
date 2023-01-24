@@ -27,7 +27,9 @@ namespace EventStreamingPlatform.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
-
+            ViewData["LastnameSortParam"] = sortOrder == "lastname" ? "lastnameDesc" : "lastname";
+            ViewData["AgeSortParam"] = sortOrder == "age" ? "ageDesc" : "age";
+            ViewData["GenderSortParam"] = sortOrder == "gender" ? "genderDesc" : "gender";
 
             if (searchString != null)
             {
@@ -50,7 +52,7 @@ namespace EventStreamingPlatform.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                actors = actors.Where(a => a.Name.Contains(searchString));
+                actors = actors.Where(a => a.Name.Contains(searchString) || a.LastName.Contains(searchString));
             }
 
             switch (sortOrder)
@@ -59,6 +61,30 @@ namespace EventStreamingPlatform.Controllers
                     actors = actors.OrderByDescending(a => a.Name);
                     break;
 
+                case "lastname":
+                    actors = actors.OrderBy(a => a.LastName);
+                    break;
+
+                case "lastnameDesc":
+                    actors = actors.OrderByDescending(a => a.LastName);
+                    break;
+
+                case "age":
+                    actors = actors.OrderBy(a => a.Age);
+                    break;
+
+                case "ageDesc":
+                    actors = actors.OrderByDescending(a => a.Age);
+                    break;
+
+
+                case "gender":
+                    actors = actors.OrderBy(a => a.Gender);
+                    break;
+
+                case "genderDesc":
+                    actors = actors.OrderByDescending(a => a.Gender);
+                    break;
 
 
                 default:
