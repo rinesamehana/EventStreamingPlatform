@@ -20,9 +20,67 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Companies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,
+             string currentFilter,
+             string searchString,
+             int? pageNumber)
         {
-              return View(await _context.Companies.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
+            ViewData["CompanydescSortParam"] = sortOrder == "companydesc" ? "companydescDesc" : "companydesc";
+            ViewData["FoundedSortParam"] = sortOrder == "founded" ? "foundedDesc" : "founded";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+
+            }
+
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var companies = from a in _context.Companies select a;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                companies = companies.Where(a => a.CompanyName.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "nameDesc":
+                    companies = companies.OrderByDescending(a => a.CompanyName);
+                    break;
+
+                case "founded":
+                    companies = companies.OrderBy(a => a.CreatedDate);
+                    break;
+
+                case "foundedDesc":
+                    companies = companies.OrderByDescending(a => a.CreatedDate);
+                    break;
+
+                case "companydesc":
+                    companies = companies.OrderBy(a => a.CompanyDesc);
+                    break;
+
+                case "companydescDesc":
+                    companies = companies.OrderByDescending(a => a.CompanyDesc);
+                    break;
+
+                default:
+                    companies = companies.OrderBy(a => a.CompanyName);
+                    break;
+            }
+
+            int pageSize = 3;
+            return View(await PaginatedList<Company>.CreateAsync(companies.AsNoTracking(), pageNumber ?? 1, pageSize));
+
+            // return View(await _context.Companies.ToListAsync());
         }
 
         // GET: Companies/Details/5

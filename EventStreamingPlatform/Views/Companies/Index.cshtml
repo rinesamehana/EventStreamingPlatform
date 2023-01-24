@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EventStreamingPlatform.Models.Company>
+﻿@model PaginatedList<EventStreamingPlatform.Models.Company>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,17 +9,30 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Index" method="get">
+    <div class="form-action no-color">
+        <p>
+            Find by name:<input type="text" name="searchString" value="@ViewData["CurrentFilter"]"/>
+            <input type="submit" value="Search" class="btn btn-success"/>
+            <a asp-action="Index"> Back to Full List </a>
+        </p>
+
+    </div>
+
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CompanyName)
+                  <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Company Name</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
+                 <a asp-action="Index" asp-route-sortOrder="@ViewData["FoundedSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Created Date</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CompanyDesc)
+                 <a asp-action="Index" asp-route-sortOrder="@ViewData["CompanydescSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Company Desc</a>
             </th>
 
             <th></th>
@@ -46,3 +59,23 @@
 }
     </tbody>
 </table>
+@{
+    var prevDisabled = !Model.PreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.NextPage ? "disabled" : "";
+} 
+
+<a asp-action="Index"
+   asp-route-sortOrder ="@ViewData["CurrentSort"]"
+   asp-route-pageNumber ="@(Model.PageIndex-1)"
+   asp-route-currentFilter = "@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex+1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

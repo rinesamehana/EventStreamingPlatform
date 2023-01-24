@@ -20,10 +20,86 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Recomandations
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,
+             string currentFilter,
+             string searchString,
+             int? pageNumber)
         {
-            var appContext = _context.Recomandations.Include(d => d.Filmm);
-            return View(await appContext.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
+            ViewData["AgeSortParam"] = sortOrder == "age" ? "ageDesc" : "age";
+            ViewData["DescSortParam"] = sortOrder == "desc" ? "descDesc" : "desc";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+
+            }
+
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+
+            var appContext = from a in _context.Recomandations select a;
+
+            appContext = _context.Recomandations
+                          .Include(d => d.Filmm);
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                appContext = appContext.Where(a => a.Name.Contains(searchString) || a.Age.Contains(searchString)
+                                               || a.Desc.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "nameDesc":
+                    appContext = appContext.OrderByDescending(a => a.Name);
+                    break;
+
+                case "age":
+                    appContext = appContext.OrderBy(a => a.Age);
+                    break;
+
+                case "ageDesc":
+                    appContext = appContext.OrderByDescending(a => a.Age);
+                    break;
+
+                case "desc":
+                    appContext = appContext.OrderBy(a => a.Desc);
+                    break;
+
+                case "descDesc":
+                    appContext = appContext.OrderByDescending(a => a.Desc);
+                    break;
+
+
+
+                default:
+                    appContext = appContext.OrderBy(a => a.Name);
+                    break;
+            }
+
+
+
+
+
+
+            int pageSize = 3;
+            return View(await PaginatedList<Recomandation>.CreateAsync(appContext.AsNoTracking(), pageNumber ?? 1, pageSize));
+
+
+
+
+
+
+            //var appContext = _context.Recomandations.Include(d => d.Filmm);
+            //return View(await appContext.ToListAsync());
         }
 
         // GET: Recomandations/Details/5
