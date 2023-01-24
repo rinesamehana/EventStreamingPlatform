@@ -4,6 +4,7 @@ using EventStreamingPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventStreamingPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230123205743_city")]
+    partial class city
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,21 +117,6 @@ namespace EventStreamingPlatform.Migrations
                     b.HasKey("CountryId");
 
                     b.ToTable("Country", (string)null);
-                });
-
-            modelBuilder.Entity("EventStreamingPlatform.Models.CountryLanguage", b =>
-                {
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CountryId", "LanguageId");
-
-                    b.HasIndex("LanguageId");
-
-                    b.ToTable("CountryLanguages", (string)null);
                 });
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Film", b =>
@@ -497,25 +484,6 @@ namespace EventStreamingPlatform.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("EventStreamingPlatform.Models.CountryLanguage", b =>
-                {
-                    b.HasOne("EventStreamingPlatform.Models.Country", "Country")
-                        .WithMany("CountryLanguages")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EventStreamingPlatform.Models.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Country");
-
-                    b.Navigation("Language");
-                });
-
             modelBuilder.Entity("EventStreamingPlatform.Models.Film", b =>
                 {
                     b.HasOne("EventStreamingPlatform.Models.Company", "Company")
@@ -654,8 +622,6 @@ namespace EventStreamingPlatform.Migrations
             modelBuilder.Entity("EventStreamingPlatform.Models.Country", b =>
                 {
                     b.Navigation("Cities");
-
-                    b.Navigation("CountryLanguages");
                 });
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Film", b =>

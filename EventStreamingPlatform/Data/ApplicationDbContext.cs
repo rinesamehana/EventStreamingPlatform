@@ -19,6 +19,10 @@ namespace EventStreamingPlatform.Data
         public DbSet<Language> Languages { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Actor> Actors { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<CountryLanguage> CountryLanguages { get; set; }
+        public DbSet<City> Cities { get; set; }
         public DbSet<FilmGenre> FilmGenres { get; set; }
 
         public DbSet<FilmActor> FilmActors { get; set; }
@@ -31,11 +35,16 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<Actor>().ToTable("Actor");
             modelBuilder.Entity<Recomandation>().ToTable("Recomandation");
             modelBuilder.Entity<Gender>().ToTable("Gender");
+            modelBuilder.Entity<Country>().ToTable("Country");
+            modelBuilder.Entity<City>().ToTable("City");
             modelBuilder.Entity<Language>().ToTable("Language");
             modelBuilder.Entity<Film>().ToTable("Film");
             modelBuilder.Entity<FilmGenre>().ToTable("FilmGenres");
             modelBuilder.Entity<FilmGenre>()
                 .HasKey(c => new { c.FilmId, c.GenreId });
+            modelBuilder.Entity<CountryLanguage>().ToTable("CountryLanguages");
+            modelBuilder.Entity<CountryLanguage>()
+                .HasKey(c => new { c.CountryId, c.LanguageId });
             modelBuilder.Entity<FilmActor>().ToTable("FilmActors");
             modelBuilder.Entity<FilmActor>()
                 .HasKey(c => new { c.FilmId, c.ActorId });
@@ -44,6 +53,11 @@ namespace EventStreamingPlatform.Data
        .HasOne(i => i.Company)
        .WithMany(c => c.Films)
        .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<City>()
+  .HasOne(i => i.Country)
+  .WithMany(c => c.Cities)
+  .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Actor>()
      .HasOne(i => i.Gender)
@@ -60,6 +74,8 @@ namespace EventStreamingPlatform.Data
        .WithMany(c => c.Genres)
        .OnDelete(DeleteBehavior.SetNull);
         }
+
+    
 
 
 

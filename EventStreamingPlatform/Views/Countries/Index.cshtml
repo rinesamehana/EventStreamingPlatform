@@ -1,0 +1,61 @@
+﻿@model EventStreamingPlatform.Models.StreamingViewModel.CountryIndexData
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Population</th>
+            <th>Language</th>
+            <th>Abbreviation</th>
+            <th>ISO_Code</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Countries)
+        {
+            string selectedRow = "";
+            if (item.CountryId == (int?)ViewData["CountryId"])
+            {
+                selectedRow = "table-success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Popullation)
+                </td>
+                <td>
+                    @foreach (var language in item.CountryLanguages)
+                    {
+                        @language.Language.Name <br />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Abbreviation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISO_Code)
+                </td>
+
+
+                <td>
+                         <a asp-action="Index" asp-route-id="@item.CountryId">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.CountryId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CountryId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CountryId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
