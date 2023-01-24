@@ -63,7 +63,7 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <table class="table">
-                          <label asp-for="FilmGenres" class="control-label">Actors: </label>
+                          <label asp-for="FilmMainActors" class="control-label">Main Actors: </label>
                         <tr>
                             @{
                                 int cntt = 0;
@@ -78,6 +78,35 @@
                                     @:<td>
                                         <input type="checkbox"
                                                name="selectedActors"
+                                               value="@actor.ActorId"
+                                               @(Html.Raw(actor.Assigned ? "checked=\"checked\"" : "")) />
+                                                 //@actor.ActorId @:  @actor.Name
+                                               @actor.Name
+                                    @:</td>
+                                }
+                                @:</tr>
+                            }
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <table class="table">
+                          <label asp-for="FilmMainActors" class="control-label">Others Actors: </label>
+                        <tr>
+                            @{
+                                int cnttt = 0;
+                                List<EventStreamingPlatform.Models.StreamingViewModel.AssignedMainActorData> actorss = ViewBag.Actorss;
+
+                                foreach (var actor in actorss)
+                                {
+                                    if (cnttt++ % 4 == 0)
+                                    {
+                                        @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedMainActors"
                                                value="@actor.ActorId"
                                                @(Html.Raw(actor.Assigned ? "checked=\"checked\"" : "")) />
                                                  //@actor.ActorId @:  @actor.Name

@@ -27,6 +27,8 @@ namespace EventStreamingPlatform.Data
 
         public DbSet<FilmActor> FilmActors { get; set; }
 
+        public DbSet<FilmMainActor> FilmMainActors { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -48,6 +50,9 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<FilmActor>().ToTable("FilmActors");
             modelBuilder.Entity<FilmActor>()
                 .HasKey(c => new { c.FilmId, c.ActorId });
+            modelBuilder.Entity<FilmMainActor>().ToTable("FilmMainActors");
+            modelBuilder.Entity<FilmMainActor>()
+                .HasKey(c => new { c.FilmId, c.ActorId });
 
             modelBuilder.Entity<Film>()
        .HasOne(i => i.Company)
@@ -63,6 +68,16 @@ namespace EventStreamingPlatform.Data
      .HasOne(i => i.Gender)
      .WithMany(c => c.Actor)
      .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Actor>()
+ .HasOne(i => i.Country)
+ .WithMany(c => c.Actors)
+ .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Actor>()
+.HasOne(i => i.City)
+.WithMany(c => c.Actors)
+.OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Film>()
        .HasOne(i => i.Language)

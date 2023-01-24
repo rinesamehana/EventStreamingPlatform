@@ -34,6 +34,7 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <table>
+                         <label asp-for="FilmGenres" class="control-label">Genres: </label>
                         <tr>
                             @{
                                 int cnt = 0;
@@ -50,7 +51,7 @@
                                                name="selectedGenres"
                                                value="@genre.GenreId"
                                                @(Html.Raw(genre.Assigned ? "checked=\"checked\"" : "")) />
-                                               @genre.GenreId @:  @genre.Name
+                                               @: -  @genre.Name
                                         @:</td>
                                 }
                                 @:</tr>
@@ -61,6 +62,7 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <table>
+                         <label asp-for="FilmActors" class="control-label">Main Actors: </label>
                         <tr>
                             @{
                                 int cntt = 0;
@@ -75,6 +77,34 @@
                                     @:<td>
                                         <input type="checkbox"
                                                name="selectedActors"
+                                               value="@actor.ActorId"
+                                               @(Html.Raw(actor.Assigned ? "checked=\"checked\"" : "")) />
+                                               @actor.ActorId @:  @actor.Name
+                                        @:</td>
+                                }
+                                @:</tr>
+                            }
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <table>
+                         <label asp-for="FilmMainActors" class="control-label">Others Actors: </label>
+                        <tr>
+                            @{
+                                int cnttt = 0;
+                                List<EventStreamingPlatform.Models.StreamingViewModel.AssignedMainActorData> actorss = ViewBag.Actorss;
+
+                                foreach (var actor in actorss)
+                                {
+                                    if (cnttt++ % 4 == 0)
+                                    {
+                                        @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedMainActors"
                                                value="@actor.ActorId"
                                                @(Html.Raw(actor.Assigned ? "checked=\"checked\"" : "")) />
                                                @actor.ActorId @:  @actor.Name

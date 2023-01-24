@@ -46,6 +46,7 @@ namespace EventStreamingPlatform.Controllers
             var cities = from a in _context.Cities select a;
 
             cities = _context.Cities
+
                 .Include(c => c.Country)
                 .AsNoTracking();
 

@@ -19,5 +19,7 @@ namespace EventStreamingPlatform.Models
         public Language Language { get; set; }
         public ICollection<FilmGenre> FilmGenres { get; set; }
         public ICollection<FilmActor> FilmActors { get; set; }
+
+        public ICollection<FilmMainActor> FilmMainActors { get; set; }
     }
 }

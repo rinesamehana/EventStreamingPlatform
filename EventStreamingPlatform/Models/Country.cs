@@ -15,5 +15,7 @@
         public ICollection<CountryLanguage> CountryLanguages { get; set; }
         public ICollection<City> Cities { get; set; }
 
+        public ICollection<Actor> Actors { get; set; }
+
     }
 }

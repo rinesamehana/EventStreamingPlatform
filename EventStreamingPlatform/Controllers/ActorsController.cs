@@ -48,6 +48,8 @@ namespace EventStreamingPlatform.Controllers
 
             actors = _context.Actors
                 .Include(c => c.Gender)
+                 .Include(c => c.Country)
+                 .Include(c => c.City)
                 .AsNoTracking();
 
             if (!String.IsNullOrEmpty(searchString))
@@ -114,6 +116,8 @@ namespace EventStreamingPlatform.Controllers
 
             var actor = await _context.Actors
                 .Include(i=>i.Gender)
+                 .Include(i => i.Country)
+                 .Include(i => i.City)
                 .FirstOrDefaultAsync(m => m.ActorId == id);
             if (actor == null)
             {
@@ -126,6 +130,7 @@ namespace EventStreamingPlatform.Controllers
         // GET: Actors/Create
         public IActionResult Create()
         {
+            
             PopulateGenderDropDownList();
             return View();
         }
@@ -135,7 +140,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ActorId,Name,LastName,Age, GenderId")] Actor actor)
+        public async Task<IActionResult> Create([Bind("ActorId,Name,LastName,Age, GenderId, CountryId,CityId")] Actor actor)
         {
             if (ModelState.IsValid)
             {
@@ -143,7 +148,8 @@ namespace EventStreamingPlatform.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            PopulateGenderDropDownList(actor.GenderId);
+            PopulateGenderDropDownList(actor.GenderId, actor.CountryId, actor.CityId);
+       
             return View(actor);
         }
 
@@ -160,7 +166,8 @@ namespace EventStreamingPlatform.Controllers
             {
                 return NotFound();
             }
-            PopulateGenderDropDownList(actor.GenderId);
+            PopulateGenderDropDownList(actor.GenderId, actor.CountryId, actor.CityId);
+           
             return View(actor);
         }
 
@@ -181,7 +188,7 @@ namespace EventStreamingPlatform.Controllers
 
             if (await TryUpdateModelAsync<Actor>(actorToUpdate,
                 "",
-                c => c.Name, c=>c.LastName , c => c.Age, c => c.GenderId))
+                c => c.Name, c=>c.LastName , c => c.Age, c => c.GenderId, c => c.CountryId, c=>c.CityId))
             {
                 try
                 {
@@ -196,17 +203,28 @@ namespace EventStreamingPlatform.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            PopulateGenderDropDownList(actorToUpdate.GenderId);
+            PopulateGenderDropDownList(actorToUpdate.GenderId, actorToUpdate.CountryId, actorToUpdate.CityId);
             return View(actorToUpdate);
         }
 
-        private void PopulateGenderDropDownList(object selectedGender = null)
+        private void PopulateGenderDropDownList(object selectedGender = null, object selectedCountry = null, object selectedCity = null)
         {
             var gendersQuery = from d in _context.Genders
                                       orderby d.Name
                                       select d;
             ViewBag.GenderId = new SelectList(gendersQuery.AsNoTracking(), "GenderId", "Name", selectedGender);
+
+            var countriesQuery = from d in _context.Countries
+                               orderby d.Name
+                               select d;
+            ViewBag.CountryId = new SelectList(countriesQuery.AsNoTracking(), "CountryId", "Name", selectedCountry);
+
+            var citiesQuery = from d in _context.Cities
+                              orderby d.Name
+                                 select d;
+            ViewBag.CityId = new SelectList(citiesQuery.AsNoTracking(), "CityId", "Name", selectedCity);
         }
+
 
         // GET: Actors/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -218,6 +236,8 @@ namespace EventStreamingPlatform.Controllers
 
             var actor = await _context.Actors
                 .Include(c => c.Gender)
+                .Include(c => c.Country)
+                .Include(c => c.City)
                 .FirstOrDefaultAsync(m => m.ActorId == id);
             if (actor == null)
             {

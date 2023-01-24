@@ -4,6 +4,7 @@ using EventStreamingPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventStreamingPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230124163113_mainactor")]
+    partial class mainactor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,9 +35,6 @@ namespace EventStreamingPlatform.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
@@ -49,8 +48,6 @@ namespace EventStreamingPlatform.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ActorId");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("CountryId");
 
@@ -504,11 +501,6 @@ namespace EventStreamingPlatform.Migrations
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Actor", b =>
                 {
-                    b.HasOne("EventStreamingPlatform.Models.City", "City")
-                        .WithMany("Actors")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("EventStreamingPlatform.Models.Country", "Country")
                         .WithMany("Actors")
                         .HasForeignKey("CountryId")
@@ -518,8 +510,6 @@ namespace EventStreamingPlatform.Migrations
                         .WithMany("Actor")
                         .HasForeignKey("GenderId")
                         .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("City");
 
                     b.Navigation("Country");
 
@@ -704,11 +694,6 @@ namespace EventStreamingPlatform.Migrations
                     b.Navigation("FilmActors");
 
                     b.Navigation("FilmMainActors");
-                });
-
-            modelBuilder.Entity("EventStreamingPlatform.Models.City", b =>
-                {
-                    b.Navigation("Actors");
                 });
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Company", b =>

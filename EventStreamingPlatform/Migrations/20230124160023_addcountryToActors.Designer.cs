@@ -4,6 +4,7 @@ using EventStreamingPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventStreamingPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230124160023_addcountryToActors")]
+    partial class addcountryToActors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,9 +35,6 @@ namespace EventStreamingPlatform.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
@@ -49,8 +48,6 @@ namespace EventStreamingPlatform.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ActorId");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("CountryId");
 
@@ -196,21 +193,6 @@ namespace EventStreamingPlatform.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("FilmGenres", (string)null);
-                });
-
-            modelBuilder.Entity("EventStreamingPlatform.Models.FilmMainActor", b =>
-                {
-                    b.Property<int>("FilmId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ActorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FilmId", "ActorId");
-
-                    b.HasIndex("ActorId");
-
-                    b.ToTable("FilmMainActors", (string)null);
                 });
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Gender", b =>
@@ -504,22 +486,14 @@ namespace EventStreamingPlatform.Migrations
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Actor", b =>
                 {
-                    b.HasOne("EventStreamingPlatform.Models.City", "City")
-                        .WithMany("Actors")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("EventStreamingPlatform.Models.Country", "Country")
                         .WithMany("Actors")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("CountryId");
 
                     b.HasOne("EventStreamingPlatform.Models.Gender", "Gender")
                         .WithMany("Actor")
                         .HasForeignKey("GenderId")
                         .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("City");
 
                     b.Navigation("Country");
 
@@ -610,25 +584,6 @@ namespace EventStreamingPlatform.Migrations
                     b.Navigation("Genre");
                 });
 
-            modelBuilder.Entity("EventStreamingPlatform.Models.FilmMainActor", b =>
-                {
-                    b.HasOne("EventStreamingPlatform.Models.Actor", "Actor")
-                        .WithMany("FilmMainActors")
-                        .HasForeignKey("ActorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EventStreamingPlatform.Models.Film", "Film")
-                        .WithMany("FilmMainActors")
-                        .HasForeignKey("FilmId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Actor");
-
-                    b.Navigation("Film");
-                });
-
             modelBuilder.Entity("EventStreamingPlatform.Models.Genre", b =>
                 {
                     b.HasOne("EventStreamingPlatform.Models.Recomandation", "Recomandation")
@@ -702,13 +657,6 @@ namespace EventStreamingPlatform.Migrations
             modelBuilder.Entity("EventStreamingPlatform.Models.Actor", b =>
                 {
                     b.Navigation("FilmActors");
-
-                    b.Navigation("FilmMainActors");
-                });
-
-            modelBuilder.Entity("EventStreamingPlatform.Models.City", b =>
-                {
-                    b.Navigation("Actors");
                 });
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Company", b =>
@@ -730,8 +678,6 @@ namespace EventStreamingPlatform.Migrations
                     b.Navigation("FilmActors");
 
                     b.Navigation("FilmGenres");
-
-                    b.Navigation("FilmMainActors");
                 });
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Gender", b =>

@@ -38,6 +38,12 @@
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["GenderSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]"> Gender</a>
             </th>
+            <th>
+                Country</a>
+            </th>
+            <th>
+                City</a>
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -56,6 +62,12 @@
                       <td>
                     @Html.DisplayFor(modelItem => item.Gender.Name)
                   </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Country.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City.Name)
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ActorId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ActorId">Details</a> |
