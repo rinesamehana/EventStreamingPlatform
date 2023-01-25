@@ -4,6 +4,7 @@ using EventStreamingPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventStreamingPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230125184420_upsdd")]
+    partial class upsdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,20 +155,12 @@ namespace EventStreamingPlatform.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("RowVersion")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<int?>("SeasonId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SerieId")
                         .HasColumnType("int");
 
                     b.HasKey("EpisodeId");
 
                     b.HasIndex("SeasonId");
-
-                    b.HasIndex("SerieId");
 
                     b.ToTable("Episode", (string)null);
                 });
@@ -640,13 +634,7 @@ namespace EventStreamingPlatform.Migrations
                         .WithMany("Episode")
                         .HasForeignKey("SeasonId");
 
-                    b.HasOne("EventStreamingPlatform.Models.Serie", "Serie")
-                        .WithMany()
-                        .HasForeignKey("SerieId");
-
                     b.Navigation("Season");
-
-                    b.Navigation("Serie");
                 });
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Film", b =>

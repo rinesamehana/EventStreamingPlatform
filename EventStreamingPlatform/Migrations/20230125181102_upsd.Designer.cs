@@ -4,6 +4,7 @@ using EventStreamingPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventStreamingPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230125181102_upsd")]
+    partial class upsd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,35 +142,6 @@ namespace EventStreamingPlatform.Migrations
                     b.HasIndex("LanguageId");
 
                     b.ToTable("CountryLanguages", (string)null);
-                });
-
-            modelBuilder.Entity("EventStreamingPlatform.Models.Episode", b =>
-                {
-                    b.Property<int>("EpisodeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EpisodeId"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int?>("SeasonId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SerieId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EpisodeId");
-
-                    b.HasIndex("SeasonId");
-
-                    b.HasIndex("SerieId");
-
-                    b.ToTable("Episode", (string)null);
                 });
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Film", b =>
@@ -634,21 +607,6 @@ namespace EventStreamingPlatform.Migrations
                     b.Navigation("Language");
                 });
 
-            modelBuilder.Entity("EventStreamingPlatform.Models.Episode", b =>
-                {
-                    b.HasOne("EventStreamingPlatform.Models.Season", "Season")
-                        .WithMany("Episode")
-                        .HasForeignKey("SeasonId");
-
-                    b.HasOne("EventStreamingPlatform.Models.Serie", "Serie")
-                        .WithMany()
-                        .HasForeignKey("SerieId");
-
-                    b.Navigation("Season");
-
-                    b.Navigation("Serie");
-                });
-
             modelBuilder.Entity("EventStreamingPlatform.Models.Film", b =>
                 {
                     b.HasOne("EventStreamingPlatform.Models.Company", "Company")
@@ -869,8 +827,6 @@ namespace EventStreamingPlatform.Migrations
 
             modelBuilder.Entity("EventStreamingPlatform.Models.Season", b =>
                 {
-                    b.Navigation("Episode");
-
                     b.Navigation("SerieSeasons");
                 });
 

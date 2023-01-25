@@ -1,0 +1,110 @@
+﻿@model EventStreamingPlatform.Models.StreamingViewModel.SerieIndexData
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Desc</th>
+            <th>Season</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Seriess)
+        {
+            string selectedRow = "";
+            if (item.SerieId == (int?)ViewData["SerieId"])
+            {
+                selectedRow = "table-success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @foreach (var genre in item.SerieSeasons)
+                    {
+                        @genre.Season.Name <br />
+                    }
+                </td>
+               
+             
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.SerieId">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.SerieId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.SerieId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.SerieId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Seasons != null)
+{
+    <h3>Seasons with episodes for <span style="font-style: oblique;">@ViewBag.Serie</span></h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Number</th>
+            <th>Name</th>
+          
+        </tr>
+
+        @foreach (var item in Model.Seasons)
+        {
+            string selectedRow = "";
+            if (item.SeasonId == (int?)ViewData["SeasonId"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.ActionLink("Select", "Index", new { seasonId = item.SeasonId })
+                </td>
+                <td>
+                    @item.SeasonId
+                </td>
+                <td>
+                    @item.Name
+                </td>
+            
+            </tr>
+        }
+
+    </table>
+}
+@if (Model.Episodes != null)
+{
+    <h3>
+        Students Enrolled in <span style="font-style: oblique;">@ViewBag.Season</span>
+    </h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Grade</th>
+        </tr>
+        @foreach (var item in Model.Episodes)
+        {
+            <tr>
+                <td>
+                    @item.EpisodeId
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+            </tr>
+        }
+    </table>
+}

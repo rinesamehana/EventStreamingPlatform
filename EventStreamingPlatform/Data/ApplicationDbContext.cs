@@ -20,6 +20,10 @@ namespace EventStreamingPlatform.Data
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Actor> Actors { get; set; }
 
+        public DbSet<Episode> Episodes { get; set; }
+        public DbSet<Serie> Series { get; set; }
+        public DbSet<Season> Seasons { get; set; }
+        public DbSet<SerieSeason> SerieSeasons { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<CountryLanguage> CountryLanguages { get; set; }
         public DbSet<City> Cities { get; set; }
@@ -41,9 +45,16 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<City>().ToTable("City");
             modelBuilder.Entity<Language>().ToTable("Language");
             modelBuilder.Entity<Film>().ToTable("Film");
+            modelBuilder.Entity<Episode>().ToTable("Episode");
             modelBuilder.Entity<FilmGenre>().ToTable("FilmGenres");
             modelBuilder.Entity<FilmGenre>()
                 .HasKey(c => new { c.FilmId, c.GenreId });
+            modelBuilder.Entity<Season>().ToTable("Season");
+            modelBuilder.Entity<Serie>().ToTable("Serie");
+            modelBuilder.Entity<SerieSeason>().ToTable("SerieSeasons");
+            modelBuilder.Entity<SerieSeason>()
+                .HasKey(c => new { c.SeasonId, c.SerieId });
+           
             modelBuilder.Entity<CountryLanguage>().ToTable("CountryLanguages");
             modelBuilder.Entity<CountryLanguage>()
                 .HasKey(c => new { c.CountryId, c.LanguageId });
