@@ -25,6 +25,9 @@ namespace  EventStreamingPlatform.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public static string Email => "Email";
 
+        public static string FirstName => "FirstName";
+
+        public static string LastName => "LastName";
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
