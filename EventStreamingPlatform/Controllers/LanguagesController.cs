@@ -18,7 +18,17 @@ namespace EventStreamingPlatform.Controllers
         {
             _context = context;
         }
+        [Route("api/{controller}")]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
 
+            var languages = _context.Languages
+              
+                 .ToList();
+
+            return Json(new { data = languages });
+        }
         // GET: Languages
         public async Task<IActionResult> Index(string sortOrder,
              string currentFilter,

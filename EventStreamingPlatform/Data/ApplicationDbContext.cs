@@ -16,7 +16,7 @@ namespace EventStreamingPlatform.Data
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Recomandation> Recomandations { get; set; }
 
-        public DbSet<Company> Companies { get; set; }
+        public DbSet<Company> Company { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Actor> Actors { get; set; }
@@ -76,7 +76,14 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<Film>()
        .HasOne(i => i.Company)
        .WithMany(c => c.Films)
+       .IsRequired(false)
        .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Company>()
+     .HasMany(i => i.Films)
+     .WithOne(c => c.Company)
+     .IsRequired(false)
+     .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<City>()
   .HasOne(i => i.Country)
@@ -101,12 +108,14 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<Film>()
        .HasOne(i => i.Language)
        .WithMany(c => c.Film)
+        .IsRequired(false)
        .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Genre>()
        .HasOne(i => i.Recomandation)
        .WithMany(c => c.Genres)
-       .OnDelete(DeleteBehavior.SetNull);
+       .OnDelete(DeleteBehavior.SetNull)
+        .IsRequired(false);
         }
 
     

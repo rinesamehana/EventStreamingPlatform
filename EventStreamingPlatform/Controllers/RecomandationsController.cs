@@ -18,7 +18,16 @@ namespace EventStreamingPlatform.Controllers
         {
             _context = context;
         }
+        [Route("api/{controller}")]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
 
+            var recomandations = _context.Recomandations
+                          .Include(d => d.Filmm).ToList();
+
+            return Json(new { data = recomandations });
+        }
         // GET: Recomandations
         public async Task<IActionResult> Index(string sortOrder,
              string currentFilter,

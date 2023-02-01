@@ -23,9 +23,17 @@ namespace EventStreamingPlatform.Controllers
         public IActionResult GetAll()
         {
 
-            var actors = _context.Films;
+            var films = _context.Films.Include(c => c.Company)
+                  .Include(c => c.Language)
+                  .Include(i => i.FilmGenres)
+                    .ThenInclude(i => i.Genre)
+                        .ThenInclude(i => i.Recomandation)
+                    .Include(c => c.FilmActors)
+                        .ThenInclude(i => i.Actor)
+                     .Include(c => c.FilmMainActors)
+                        .ThenInclude(i => i.Actor).ToList();
 
-            return Json(new { data = actors });
+            return Json(new { data = films });
         }
         // GET: Films
         
@@ -280,7 +288,7 @@ namespace EventStreamingPlatform.Controllers
 
         private void PopulateCompnayDropDownList(object selectedCompany = null)
         {
-            var companyQuery = from d in _context.Companies
+            var companyQuery = from d in _context.Company
                                       orderby d.CompanyName
                                       select d;
             ViewBag.CompanyId = new SelectList(companyQuery.AsNoTracking(), "CompanyId", "CompanyName", selectedCompany);

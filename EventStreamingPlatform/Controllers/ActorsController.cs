@@ -18,7 +18,17 @@ namespace EventStreamingPlatform.Controllers
         {
             _context = context;
         }
+        [Route("api/{controller}")]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
 
+            var actors = _context.Actors.Include(c => c.Gender)
+                 .Include(c => c.Country)
+                 .Include(c => c.City).ToList();
+
+            return Json(new { data = actors });
+        }
         // GET: Actors
         public async Task<IActionResult> Index(string sortOrder,
             string currentFilter,

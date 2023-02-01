@@ -16,7 +16,18 @@ namespace EventStreamingPlatform.Controllers
         {
             _context = context;
         }
+        [Route("api/{controller}")]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
 
+            var countries = _context.Countries
+                .Include(i => i.CountryLanguages)
+                    .ThenInclude(i => i.Language)
+                 .ToList();
+
+            return Json(new { data = countries });
+        }
         // GET: Films
         public async Task<IActionResult> Index(int? id, int? languageId)
         {

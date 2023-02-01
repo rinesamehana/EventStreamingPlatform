@@ -18,7 +18,7 @@ namespace EventStreamingPlatform.Models
         public int? RecomandationId { get; set; }
 
         public Recomandation Recomandation { get; set; }
-      
-        public ICollection<FilmGenre> FilmGenres { get; set; }
+
+        public List<FilmGenre> FilmGenres { get; set; } = new List<FilmGenre>();
     }
 }

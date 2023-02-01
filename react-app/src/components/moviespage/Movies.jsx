@@ -41,7 +41,8 @@ return (
                 /> */}
                 <div className="featureddTitles">
                   <h1>{qyteti.title}</h1>
-                  <h1>{qyteti.companyId}</h1>
+                  <h1>{qyteti.company.companyName}</h1>
+                  <h1>{qyteti.language.name}</h1>
                  
                 </div>
               </div>

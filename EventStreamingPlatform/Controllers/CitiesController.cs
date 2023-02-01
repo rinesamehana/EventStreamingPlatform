@@ -19,7 +19,17 @@ namespace EventStreamingPlatform.Controllers
         {
             _context = context;
         }
+        [Route("api/{controller}")]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
 
+            var cities = _context.Cities
+                 .Include(c => c.Country)
+                 .ToList();
+
+            return Json(new { data = cities });
+        }
         // GET: Cities
         public async Task<IActionResult> Index(string sortOrder,
               string currentFilter,

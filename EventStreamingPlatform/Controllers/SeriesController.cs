@@ -14,7 +14,19 @@ namespace EventStreamingPlatform.Controllers
         {
             _context = context;
         }
+        [Route("api/{controller}")]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
 
+            var series = _context.Series
+                .Include(i => i.SerieSeasons)
+                    .ThenInclude(i => i.Season)
+                        .ThenInclude(i => i.Episode)
+                 .ToList();
+
+            return Json(new { data = series });
+        }
         // GET: Series
         public async Task<IActionResult> Index(int? id, int? seasonId)
         {
