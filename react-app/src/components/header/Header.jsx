@@ -20,7 +20,7 @@ const Header = () => {
                 <a href='/'>Series</a>
               </li>
               <li>
-                <a href='/'>Movies</a>
+                <a href='/movies'>Movies</a>
               </li>
             
              
@@ -34,8 +34,15 @@ const Header = () => {
           </nav>
           <div className='account flexSB'>
            
+           
+           <a href={`https://localhost:44337/Identity/Account/Login`}>
             <button>Log in</button>
+            </a>
+
+
+            <a href={`https://localhost:44337/Identity/Account/Register`}>
             <button>Sign in</button>
+            </a>
           </div>
         </div>
       </header>

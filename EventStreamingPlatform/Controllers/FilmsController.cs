@@ -7,16 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EventStreamingPlatform.Controllers
 {
+   
     public class FilmsController : Controller
     {
+
+   
         private readonly ApplicationDbContext _context;
 
         public FilmsController(ApplicationDbContext context)
         {
             _context = context;
         }
+        [Route("api/{controller}")]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
 
+            var actors = _context.Films;
+
+            return Json(new { data = actors });
+        }
         // GET: Films
+        
+        [HttpGet]
         public async Task<IActionResult> Index(int? id, int? genreId, int? actorId)
         {
             var viewModel = new FilmIndexData();
