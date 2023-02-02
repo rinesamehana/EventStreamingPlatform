@@ -16,7 +16,7 @@
 <form asp-action="Index" method="get">
     <div class="form-action no-color">
         <p>
-            Find by name or surname:<input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+            Find by name or recomandation<input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" class="btn btn-success" />
             <a asp-action="Index"> Back to Full List </a>
         </p>
@@ -28,13 +28,13 @@
     <thead>
         <tr>
             <th>
-               GenreId
+             <a asp-action="Index" asp-route-sortOrder="@ViewData["GenreIDSortParam"]" >Genre ID</a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Name</a>
             </th>
             <th>
-                Recomandation
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["RecomandationSortParam"]"  asp-route-CurrentFilter="@ViewData["CurrentFilter"]" >Recomandation</a>
             </th>
         </tr>
     </thead>

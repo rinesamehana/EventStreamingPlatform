@@ -37,7 +37,8 @@ namespace EventStreamingPlatform.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
-           
+            ViewData["RecomandationSortParam"] = sortOrder == "recomandation" ? "recomandationDesc" : "recomandation";
+            ViewData["GenreIDSortParam"] = sortOrder == "genreid" ? "genreidDesc" : "genreid";
 
             if (searchString != null)
             {
@@ -54,13 +55,13 @@ namespace EventStreamingPlatform.Controllers
 
             var genres = from a in _context.Genres select a;
 
-            genres= _context.Genres
+            genres = _context.Genres
                 .Include(c => c.Recomandation)
                 .AsNoTracking();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                genres = genres.Where(a => a.Name.Contains(searchString) );
+                genres = genres.Where(a => a.Name.Contains(searchString) ||  a.Recomandation.Name.Contains(searchString) );
             }
 
             switch (sortOrder)
@@ -69,7 +70,21 @@ namespace EventStreamingPlatform.Controllers
                     genres = genres.OrderByDescending(a => a.Name);
                     break;
 
-               
+                case "recomandation":
+                    genres = genres.OrderBy(a => a.Recomandation);
+                    break;
+
+                case "recomandationDesc":
+                    genres = genres.OrderByDescending(a => a.Recomandation);
+                    break;
+
+                case "genreid":
+                    genres = genres.OrderBy(a => a.GenreId);
+                    break;
+
+                case "genreidDesc":
+                    genres = genres.OrderByDescending(a => a.GenreId);
+                    break;
 
                 default:
                     genres = genres.OrderBy(a => a.Name);

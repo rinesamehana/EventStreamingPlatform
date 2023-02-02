@@ -38,7 +38,7 @@ namespace EventStreamingPlatform.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
-
+            ViewData["CountrySortParam"] = sortOrder == "country" ? "countryDesc" : "country";
 
             if (searchString != null)
             {
@@ -62,13 +62,21 @@ namespace EventStreamingPlatform.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                cities = cities.Where(a => a.Name.Contains(searchString));
+                cities = cities.Where(a => a.Name.Contains(searchString) || a.Country.Name.Contains(searchString));
             }
 
             switch (sortOrder)
             {
                 case "nameDesc":
                     cities = cities.OrderByDescending(a => a.Name);
+                    break;
+
+                case "country":
+                    cities = cities.OrderBy(a => a.Country);
+                    break;
+
+                case "countryDesc":
+                    cities = cities.OrderByDescending(a => a.Country);
                     break;
 
 
