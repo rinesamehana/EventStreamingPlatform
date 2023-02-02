@@ -63,7 +63,7 @@ namespace EventStreamingPlatform.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                companies = companies.Where(a => a.CompanyName.Contains(searchString));
+                companies = companies.Where(a => a.CompanyName.Contains(searchString) || a.CompanyDesc.Contains(searchString) );
             }
 
             switch (sortOrder)

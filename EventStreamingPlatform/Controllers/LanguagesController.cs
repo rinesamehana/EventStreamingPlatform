@@ -69,7 +69,7 @@ namespace EventStreamingPlatform.Controllers
                     languages = languages.OrderBy(a => a.ISO_Code);
                     break;
 
-                case "surnameDesc":
+                case "isocodeDesc":
                     languages = languages.OrderByDescending(a => a.ISO_Code);
                     break;
 

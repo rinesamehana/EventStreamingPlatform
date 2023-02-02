@@ -40,6 +40,8 @@ namespace EventStreamingPlatform.Controllers
             ViewData["LastnameSortParam"] = sortOrder == "lastname" ? "lastnameDesc" : "lastname";
             ViewData["AgeSortParam"] = sortOrder == "age" ? "ageDesc" : "age";
             ViewData["GenderSortParam"] = sortOrder == "gender" ? "genderDesc" : "gender";
+            ViewData["CountrySortParam"] = sortOrder == "country" ? "countryDesc" : "country";
+            ViewData["CitySortParam"] = sortOrder == "city" ? "cityDesc" : "city";
 
             if (searchString != null)
             {
@@ -64,7 +66,9 @@ namespace EventStreamingPlatform.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                actors = actors.Where(a => a.Name.Contains(searchString) || a.LastName.Contains(searchString));
+                actors = actors.Where(a => a.Name.Contains(searchString) || a.LastName.Contains(searchString) ||
+                                       a.Gender.Name.Contains(searchString) || a.Country.Name.Contains(searchString) ||
+                                       a.City.Name.Contains(searchString));
             }
 
             switch (sortOrder)
@@ -96,6 +100,22 @@ namespace EventStreamingPlatform.Controllers
 
                 case "genderDesc":
                     actors = actors.OrderByDescending(a => a.Gender);
+                    break;
+
+                case "country":
+                    actors = actors.OrderBy(a => a.Country);
+                    break;
+
+                case "countryDesc":
+                    actors = actors.OrderByDescending(a => a.Country);
+                    break;
+
+                case "city":
+                    actors = actors.OrderBy(a => a.City);
+                    break;
+
+                case "cityDesc":
+                    actors = actors.OrderByDescending(a => a.City);
                     break;
 
 
