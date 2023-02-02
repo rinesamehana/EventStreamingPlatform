@@ -27,5 +27,9 @@
         public ICollection<FilmActor> FilmActors { get; set; }
 
         public ICollection<FilmMainActor> FilmMainActors { get; set; }
+
+        public ICollection<SerieActor> SerieActors { get; set; }
+
+        public ICollection<SerieMainActor> SerieMainActors { get; set; }
     }
 }

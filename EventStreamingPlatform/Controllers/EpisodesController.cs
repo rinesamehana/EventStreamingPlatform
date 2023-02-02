@@ -154,7 +154,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EpisodeId,Name,SeasonId,SerieId,RowVersion")] Episode episode)
+        public async Task<IActionResult> Create([Bind("EpisodeId,Name,Description,SeasonId,SerieId,RowVersion")] Episode episode)
         {
             if (ModelState.IsValid)
             {

@@ -18,24 +18,123 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-       <div class="form-group">
+            <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            
+            <div class="form-group">
+               <label asp-for="Company" class="control-label"></label>
+                <select asp-for="CompanyId" class="form-control form-select" asp-items="ViewBag.CompanyId">
+                    <option value="">-- Select Company --</option>
+                </select>
+                <span asp-validation-for="CompanyId" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Language" class="control-label"></label>
+                <select asp-for="LanguageId" class="form-control form-select" asp-items="ViewBag.LanguageId">
+                    <option value="">-- Select Language --</option>
+                </select>
+                <span asp-validation-for="LanguageId" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <table class="table">
+                        <label asp-for="SerieGenres" class="control-label">Genres: </label>
+                        <tr>
+                            @{
+                                int cnt = 0;
+                                List<EventStreamingPlatform.Models.StreamingViewModel.AssignedGenreData> genres = ViewBag.Genres;
+
+                                foreach (var genre in genres)
+                                {
+                                    if (cnt++ % 4 == 0)
+                                    {
+                                        @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedGenres"
+                                               value="@genre.GenreId"
+                                               @(Html.Raw(genre.Assigned ? "checked=\"checked\"" : "")) />
+                                                @genre.Name
+                                    @:</td>
+                                }
+                                @:</tr>
+                            }
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <table class="table">
+                          <label asp-for="SerieMainActors" class="control-label">Main Actors: </label>
+                        <tr>
+                            @{
+                                int cntt = 0;
+                                List<EventStreamingPlatform.Models.StreamingViewModel.AssignedActorData> actors = ViewBag.Actors;
+
+                                foreach (var actor in actors)
+                                {
+                                    if (cntt++ % 4 == 0)
+                                    {
+                                        @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedActors"
+                                               value="@actor.ActorId"
+                                               @(Html.Raw(actor.Assigned ? "checked=\"checked\"" : "")) />
+                                                 //@actor.ActorId @:  @actor.Name
+                                               @actor.Name
+                                    @:</td>
+                                }
+                                @:</tr>
+                            }
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <table class="table">
+                          <label asp-for="SerieMainActors" class="control-label">Others Actors: </label>
+                        <tr>
+                            @{
+                                int cnttt = 0;
+                                List<EventStreamingPlatform.Models.StreamingViewModel.AssignedMainActorData> actorss = ViewBag.Actorss;
+
+                                foreach (var actor in actorss)
+                                {
+                                    if (cnttt++ % 4 == 0)
+                                    {
+                                        @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedMainActors"
+                                               value="@actor.ActorId"
+                                               @(Html.Raw(actor.Assigned ? "checked=\"checked\"" : "")) />
+                                                 //@actor.ActorId @:  @actor.Name
+                                               @actor.Name
+                                    @:</td>
+                                }
+                                @:</tr>
+                            }
+                    </table>
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <table class="table">
                         <label asp-for="SerieSeasons" class="control-label">Seasons: </label>
                         <tr>
                             @{
-                                int cnt = 0;
+                                int cntttt = 0;
                                 List<EventStreamingPlatform.Models.StreamingViewModel.AssignedSeasonData> seasons = ViewBag.Seasons;
 
                                 foreach (var season in seasons)
                                 {
-                                    if (cnt++ % 4 == 0)
+                                    if (cntttt++ % 4 == 0)
                                     {
                                         @:</tr><tr>
                                     }

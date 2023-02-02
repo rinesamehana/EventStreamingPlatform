@@ -14,7 +14,13 @@
         <tr>
             <th>Title</th>
             <th>Desc</th>
+            <th>Company</th>
+            <th>Language</th>
+            <th>Genres</th>
+            <th>Main Actors</th>
+            <th>Others Actors</th>
             <th>Season</th>
+
             <th></th>
         </tr>
     </thead>
@@ -32,6 +38,30 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Company.CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Language.Name)
+                </td>
+                <td>
+                    @foreach (var genre in item.SerieGenres)
+                    {
+                        @genre.Genre.Name <br />
+                    }
+                </td>
+                <td>
+                    @foreach (var actor in item.SerieActors)
+                    {
+                        @actor.Actor.Name @:  @actor.Actor.LastName <br />
+                    }
+                </td>
+                <td>
+                    @foreach (var actor in item.SerieMainActors)
+                    {
+                        @actor.Actor.Name @:  @actor.Actor.LastName <br />
+                    }
                 </td>
                 <td>
                     @foreach (var genre in item.SerieSeasons)
@@ -71,7 +101,7 @@
             }
             <tr class="@selectedRow">
                 <td>
-                    @Html.ActionLink("Select", "Index", new { seasonId = item.SeasonId })
+                    @Html.ActionLink("Select To See Details for Episodes", "Index", new { seasonId = item.SeasonId })
                 </td>
                 <td>
                     @item.SeasonId

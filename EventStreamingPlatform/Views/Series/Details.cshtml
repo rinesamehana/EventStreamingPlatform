@@ -26,7 +26,18 @@
             
             @Html.DisplayFor(model => model.Description)
         </dd>
-       
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Company)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Company.CompanyName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Language)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Language.Name)
+        </dd>
     </dl>
 </div>
 <div>

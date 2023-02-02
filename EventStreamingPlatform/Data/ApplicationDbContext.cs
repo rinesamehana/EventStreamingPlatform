@@ -33,6 +33,11 @@ namespace EventStreamingPlatform.Data
         public DbSet<FilmActor> FilmActors { get; set; }
 
         public DbSet<FilmMainActor> FilmMainActors { get; set; }
+        public DbSet<SerieGenre> SerieGenres { get; set; }
+
+        public DbSet<SerieActor> SerieActors { get; set; }
+
+        public DbSet<SerieMainActor> SerieMainActors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,7 +77,15 @@ namespace EventStreamingPlatform.Data
             modelBuilder.Entity<FilmMainActor>().ToTable("FilmMainActors");
             modelBuilder.Entity<FilmMainActor>()
                 .HasKey(c => new { c.FilmId, c.ActorId });
-
+            modelBuilder.Entity<SerieActor>().ToTable("SerieActors");
+            modelBuilder.Entity<SerieActor>()
+                .HasKey(c => new { c.SerieId, c.ActorId });
+            modelBuilder.Entity<SerieMainActor>().ToTable("SerieMainActors");
+            modelBuilder.Entity<SerieMainActor>()
+                .HasKey(c => new { c.SerieId, c.ActorId });
+            modelBuilder.Entity<SerieGenre>().ToTable("SerieGenres");
+            modelBuilder.Entity<SerieGenre>()
+                .HasKey(c => new { c.SerieId, c.GenreId });
             modelBuilder.Entity<Film>()
        .HasOne(i => i.Company)
        .WithMany(c => c.Films)
