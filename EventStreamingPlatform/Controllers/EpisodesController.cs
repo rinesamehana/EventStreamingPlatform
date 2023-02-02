@@ -38,7 +38,7 @@ namespace EventStreamingPlatform.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
-            ViewData["EpisodeSortParam"] = sortOrder == "episode" ? "episodeDesc" : "episode";
+            ViewData["DescriptionSortParam"] = sortOrder == "description" ? "descriptionDesc" : "description";
             ViewData["SeasonSortParam"] = sortOrder == "season" ? "seasonDesc" : "season";
             ViewData["SerieSortParam"] = sortOrder == "serie" ? "serieDesc" : "serie";
 
@@ -66,7 +66,7 @@ namespace EventStreamingPlatform.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 episodes = episodes.Where(a => a.Name.Contains(searchString) || a.Season.Name.Contains(searchString)
-                                          || a.Serie.Title.Contains(searchString));
+                                          || a.Serie.Title.Contains(searchString) || a.Description.Contains(searchString));
             }
 
             switch (sortOrder)
@@ -75,12 +75,12 @@ namespace EventStreamingPlatform.Controllers
                     episodes = episodes.OrderByDescending(a => a.Name);
                     break;
 
-                case "episode":
-                    episodes = episodes.OrderBy(a => a.EpisodeId);
+                case "description":
+                    episodes = episodes.OrderBy(a => a.Description);
                     break;
 
-                case "episodeDesc":
-                    episodes = episodes.OrderByDescending(a => a.EpisodeId);
+                case "descriptionDesc":
+                    episodes = episodes.OrderByDescending(a => a.Description);
                     break;
 
                 case "season":
