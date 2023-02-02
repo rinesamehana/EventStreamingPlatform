@@ -42,6 +42,7 @@ namespace EventStreamingPlatform.Controllers
             ViewData["GenderSortParam"] = sortOrder == "gender" ? "genderDesc" : "gender";
             ViewData["CountrySortParam"] = sortOrder == "country" ? "countryDesc" : "country";
             ViewData["CitySortParam"] = sortOrder == "city" ? "cityDesc" : "city";
+            ViewData["BiographySortParam"] = sortOrder == "biography" ? "biographyDesc" : "biography";
 
             if (searchString != null)
             {
@@ -68,7 +69,7 @@ namespace EventStreamingPlatform.Controllers
             {
                 actors = actors.Where(a => a.Name.Contains(searchString) || a.LastName.Contains(searchString) ||
                                        a.Gender.Name.Contains(searchString) || a.Country.Name.Contains(searchString) ||
-                                       a.City.Name.Contains(searchString));
+                                       a.City.Name.Contains(searchString) || a.Biography.Contains(searchString));
             }
 
             switch (sortOrder)
@@ -116,6 +117,14 @@ namespace EventStreamingPlatform.Controllers
 
                 case "cityDesc":
                     actors = actors.OrderByDescending(a => a.City);
+                    break;
+
+                case "biography":
+                    actors = actors.OrderBy(a => a.Biography);
+                    break;
+
+                case "biographyDesc":
+                    actors = actors.OrderByDescending(a => a.Biography);
                     break;
 
 
@@ -170,7 +179,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ActorId,Name,LastName,Age, GenderId, CountryId,CityId")] Actor actor)
+        public async Task<IActionResult> Create([Bind("ActorId,Name,LastName,Age, Biography, GenderId, CountryId,CityId")] Actor actor)
         {
             if (ModelState.IsValid)
             {
@@ -179,7 +188,7 @@ namespace EventStreamingPlatform.Controllers
                 return RedirectToAction(nameof(Index));
             }
             PopulateGenderDropDownList(actor.GenderId, actor.CountryId, actor.CityId);
-       
+
             return View(actor);
         }
 
@@ -218,7 +227,7 @@ namespace EventStreamingPlatform.Controllers
 
             if (await TryUpdateModelAsync<Actor>(actorToUpdate,
                 "",
-                c => c.Name, c=>c.LastName , c => c.Age, c => c.GenderId, c => c.CountryId, c=>c.CityId))
+                c => c.Name, c => c.LastName, c => c.Age, c => c.Biography, c => c.GenderId, c => c.CountryId, c => c.CityId))
             {
                 try
                 {

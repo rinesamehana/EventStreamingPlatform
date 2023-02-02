@@ -40,6 +40,8 @@ namespace EventStreamingPlatform.Controllers
             ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
             ViewData["CompanydescSortParam"] = sortOrder == "companydesc" ? "companydescDesc" : "companydesc";
             ViewData["FoundedSortParam"] = sortOrder == "founded" ? "foundedDesc" : "founded";
+            ViewData["CountrySortParam"] = sortOrder == "country" ? "countryDesc" : "country";
+            ViewData["CitySortParam"] = sortOrder == "city" ? "cityDesc" : "city";
 
             if (searchString != null)
             {
@@ -63,7 +65,8 @@ namespace EventStreamingPlatform.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                companies = companies.Where(a => a.CompanyName.Contains(searchString) || a.CompanyDesc.Contains(searchString) );
+                companies = companies.Where(a => a.CompanyName.Contains(searchString) || a.CompanyDesc.Contains(searchString) ||
+                                            a.Country.Name.Contains(searchString) || a.City.Name.Contains(searchString));
             }
 
             switch (sortOrder)
@@ -87,6 +90,23 @@ namespace EventStreamingPlatform.Controllers
                 case "companydescDesc":
                     companies = companies.OrderByDescending(a => a.CompanyDesc);
                     break;
+
+                case "country":
+                    companies = companies.OrderBy(a => a.Country);
+                    break;
+
+                case "countryDesc":
+                    companies = companies.OrderByDescending(a => a.Country);
+                    break;
+
+                case "city":
+                    companies = companies.OrderBy(a => a.City);
+                    break;
+
+                case "cityDesc":
+                    companies = companies.OrderByDescending(a => a.City);
+                    break;
+
 
                 default:
                     companies = companies.OrderBy(a => a.CompanyName);
