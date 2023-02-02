@@ -30,9 +30,70 @@ namespace EventStreamingPlatform.Controllers
             return Json(new { data = season });
         }
         // GET: Seasons
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
-              return View(await _context.Seasons.Include(e=>e.Episode).ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
+            ViewData["EpisodeSortParam"] = sortOrder == "episode" ? "episodeDesc" : "episode";
+           
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+
+            }
+
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var seasons = from a in _context.Seasons select a;
+
+            seasons = _context.Seasons
+              .Include(c => c.Episode)
+              .AsNoTracking();
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                seasons = seasons.Where(a => a.Name.Contains(searchString) );
+            }
+
+            switch (sortOrder)
+            {
+                case "nameDesc":
+                    seasons = seasons.OrderByDescending(a => a.Name);
+                    break;
+
+                case "episode":
+                    seasons = seasons.OrderBy(a => a.Episode);
+                    break;
+
+                case "episodeDesc":
+                    seasons = seasons.OrderByDescending(a => a.Episode);
+                    break;
+
+           
+
+
+                default:
+                    seasons = seasons.OrderBy(a => a.Name);
+                    break;
+            }
+
+
+
+            int pageSize = 3;
+            return View(await PaginatedList<Season>.CreateAsync(seasons.AsNoTracking(), pageNumber ?? 1, pageSize));
+
+
+            //return View(await _context.Seasons.Include(e=>e.Episode).ToListAsync());
         }
 
         // GET: Seasons/Details/5
