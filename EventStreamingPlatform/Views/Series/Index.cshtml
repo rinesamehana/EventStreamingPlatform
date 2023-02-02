@@ -57,7 +57,7 @@
     <table class="table">
         <tr>
             <th></th>
-            <th>Number</th>
+            <th>Id</th>
             <th>Name</th>
           
         </tr>
@@ -79,6 +79,7 @@
                 <td>
                     @item.Name
                 </td>
+               
             
             </tr>
         }
@@ -88,12 +89,13 @@
 @if (Model.Episodes != null)
 {
     <h3>
-        Students Enrolled in <span style="font-style: oblique;">@ViewBag.Season</span>
+        Episodes in <span style="font-style: oblique;">@ViewBag.Season</span>
     </h3>
     <table class="table">
         <tr>
+            <th>ID</th>
             <th>Name</th>
-            <th>Grade</th>
+            <th>Description</th>
         </tr>
         @foreach (var item in Model.Episodes)
         {
@@ -103,6 +105,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
                 </td>
             </tr>
         }

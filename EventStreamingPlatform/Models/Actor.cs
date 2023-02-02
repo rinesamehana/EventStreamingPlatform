@@ -10,6 +10,8 @@
 
         public int Age { get; set; }
 
+        public string Biography { get; set; }
+
         public int? GenderId { get; set; }
 
         public Gender Gender { get; set; }

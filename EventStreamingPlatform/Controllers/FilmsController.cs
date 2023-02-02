@@ -20,10 +20,12 @@ namespace EventStreamingPlatform.Controllers
         }
         [Route("api/{controller}")]
         [HttpGet]
+
+
         public IActionResult GetAll()
         {
 
-            var films = _context.Films.Include(c => c.Company)
+            var actors = _context.Films.Include(c => c.Company)
                   .Include(c => c.Language)
                   .Include(i => i.FilmGenres)
                     .ThenInclude(i => i.Genre)
@@ -33,7 +35,7 @@ namespace EventStreamingPlatform.Controllers
                      .Include(c => c.FilmMainActors)
                         .ThenInclude(i => i.Actor).ToList();
 
-            return Json(new { data = films });
+            return Json(new { data = actors });
         }
         // GET: Films
         

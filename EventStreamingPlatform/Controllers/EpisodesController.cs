@@ -116,8 +116,9 @@ namespace EventStreamingPlatform.Controllers
         // GET: Genres/Create
         public IActionResult Create()
         {
-            ViewData["SerieId"] = new SelectList(_context.Series, "SerieId", "Title");
-            PopulateRecomandationDropDownList();
+            
+            PopulateSeasonDropDownList();
+            PopulateSeriesDropDownList();
             return View();
         }
 
@@ -126,17 +127,17 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EpisodeId,Name,SeasonId,SerieId,RowVersion")] Episode genre)
+        public async Task<IActionResult> Create([Bind("EpisodeId,Name,SeasonId,SerieId,RowVersion")] Episode episode)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(genre);
+                _context.Add(episode);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SerieId"] = new SelectList(_context.Series, "SerieId", "Title", genre.SerieId);
-            PopulateRecomandationDropDownList(genre.SeasonId);
-            return View(genre);
+            PopulateSeasonDropDownList(episode.SeasonId);
+            PopulateSeriesDropDownList(episode.SerieId);
+            return View(episode);
         }
 
         // GET: Genres/Edit/5
@@ -147,15 +148,16 @@ namespace EventStreamingPlatform.Controllers
                 return NotFound();
             }
 
-            var genre = await _context.Episodes
+            var episode = await _context.Episodes
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.EpisodeId == id);
-            if (genre == null)
+            if (episode == null)
             {
                 return NotFound();
             }
-            PopulateRecomandationDropDownList(genre.SeasonId);
-            return View(genre);
+            PopulateSeasonDropDownList(episode.SeasonId);
+            PopulateSeriesDropDownList(episode.SerieId);
+            return View(episode);
         }
 
         // POST: Genres/Edit/5
@@ -170,12 +172,12 @@ namespace EventStreamingPlatform.Controllers
                 return NotFound();
             }
 
-            var genreToUpdate = await _context.Episodes
+            var episodeToUpdate = await _context.Episodes
                 .FirstOrDefaultAsync(c => c.EpisodeId == id);
 
-            if (await TryUpdateModelAsync<Episode>(genreToUpdate,
+            if (await TryUpdateModelAsync<Episode>(episodeToUpdate,
                 "",
-                c => c.Name, c => c.SeasonId))
+                c => c.Name, c=>c.Description, c => c.SeasonId, d=>d.SerieId))
             {
                 try
                 {
@@ -190,16 +192,24 @@ namespace EventStreamingPlatform.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            PopulateRecomandationDropDownList(genreToUpdate.SeasonId);
-            return View(genreToUpdate);
+            PopulateSeasonDropDownList(episodeToUpdate.SeasonId);
+            PopulateSeriesDropDownList(episodeToUpdate.SerieId);
+            return View(episodeToUpdate);
         }
 
-        private void PopulateRecomandationDropDownList(object selectedRecomandation = null)
+        private void PopulateSeasonDropDownList(object selectedSeason = null)
         {
-            var recomandationsQuery = from d in _context.Seasons
+            var seasonsQuery = from d in _context.Seasons
                                       orderby d.Name
                                       select d;
-            ViewBag.SeasonId = new SelectList(recomandationsQuery.AsNoTracking(), "SeasonId", "Name", selectedRecomandation);
+            ViewBag.SeasonId = new SelectList(seasonsQuery.AsNoTracking(), "SeasonId", "Name", selectedSeason);
+        }
+        private void PopulateSeriesDropDownList(object selectedSerie = null)
+        {
+            var seriesQuery = from d in _context.Series
+                                      orderby d.Title
+                                      select d;
+            ViewBag.SerieId = new SelectList(seriesQuery.AsNoTracking(), "SerieId", "Title", selectedSerie);
         }
 
         // GET: Genres/Delete/5
@@ -212,6 +222,7 @@ namespace EventStreamingPlatform.Controllers
 
             var genre = await _context.Episodes
                 .Include(c => c.Season)
+                .Include(c => c.Serie)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.EpisodeId == id);
             if (genre == null)

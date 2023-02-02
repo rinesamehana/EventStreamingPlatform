@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EventStreamingPlatform.Data;
 using EventStreamingPlatform.Models;
+using EventStreamingPlatform.Migrations;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -55,6 +56,11 @@ namespace EventStreamingPlatform.Controllers
 
             var companies = from a in _context.Company select a;
 
+            companies = _context.Company
+               .Include(c => c.Country)
+               .Include(c=>c.City)
+               .AsNoTracking();
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 companies = companies.Where(a => a.CompanyName.Contains(searchString));
@@ -102,6 +108,8 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var company = await _context.Company
+                .Include(c => c.Country)
+                .Include(c => c.City)
                 .FirstOrDefaultAsync(m => m.CompanyId == id);
             if (company == null)
             {
@@ -114,6 +122,8 @@ namespace EventStreamingPlatform.Controllers
         // GET: Companies/Create
         public IActionResult Create()
         {
+            PopulateCountryDropDownList();
+            PopulateCityDropDownList();
             return View();
         }
 
@@ -122,7 +132,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CompanyId,CompanyName,CreatedDate,CompanyDesc")] Company company)
+        public async Task<IActionResult> Create([Bind("CompanyId,CompanyName,CreatedDate,CompanyDesc,CountryId,CityId")] Company company)
         {
             if (ModelState.IsValid)
             {
@@ -130,6 +140,8 @@ namespace EventStreamingPlatform.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            PopulateCountryDropDownList(company.CountryId);
+            PopulateCityDropDownList(company.CityId);
             return View(company);
         }
 
@@ -146,42 +158,46 @@ namespace EventStreamingPlatform.Controllers
             {
                 return NotFound();
             }
+            PopulateCountryDropDownList(company.CountryId);
+            PopulateCityDropDownList(company.CityId);
             return View(company);
         }
 
         // POST: Companies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CompanyId,CompanyName,CreatedDate,CompanyDesc")] Company company)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != company.CompanyId)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var companyToUpdate = await _context.Company
+                .FirstOrDefaultAsync(c => c.CompanyId == id);
+
+            if (await TryUpdateModelAsync<Company>(companyToUpdate,
+                "",
+                c => c.CompanyName,c=>c.CompanyDesc, c=>c.CreatedDate, c=>c.CityId,c => c.CountryId))
             {
                 try
                 {
-                    _context.Update(company);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!CompanyExists(company.CompanyId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(company);
+            PopulateCountryDropDownList(companyToUpdate.CountryId);
+            PopulateCityDropDownList(companyToUpdate.CityId);
+            return View(companyToUpdate);
         }
 
         // GET: Companies/Delete/5
@@ -193,6 +209,8 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var company = await _context.Company
+                .Include(c => c.Country)
+                .Include(c => c.City)
                 .FirstOrDefaultAsync(m => m.CompanyId == id);
             if (company == null)
             {
@@ -200,6 +218,20 @@ namespace EventStreamingPlatform.Controllers
             }
 
             return View(company);
+        }
+        private void PopulateCountryDropDownList(object selectedCountry = null)
+        {
+            var countriesQuery = from d in _context.Countries
+                                 orderby d.Name
+                                 select d;
+            ViewBag.CountryId = new SelectList(countriesQuery.AsNoTracking(), "CountryId", "Name", selectedCountry);
+        }
+        private void PopulateCityDropDownList(object selectedCity = null)
+        {
+            var citiesQuery = from d in _context.Cities
+                                 orderby d.Name
+                                 select d;
+            ViewBag.CityId = new SelectList(citiesQuery.AsNoTracking(), "CityId", "Name", selectedCity);
         }
 
         // POST: Companies/Delete/5

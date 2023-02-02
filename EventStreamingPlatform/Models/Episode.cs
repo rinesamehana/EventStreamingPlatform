@@ -6,6 +6,8 @@
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public byte[] RowVersion { get; set; }
         public int? SeasonId { get; set; }
 

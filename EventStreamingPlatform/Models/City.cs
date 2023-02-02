@@ -11,5 +11,7 @@
         public Country Country { get; set; }
 
         public ICollection<Actor> Actors { get; set; }
+
+        public ICollection<Company> Companies { get; set; }
     }
 }

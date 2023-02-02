@@ -34,7 +34,12 @@
             <th>
                  <a asp-action="Index" asp-route-sortOrder="@ViewData["CompanydescSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Company Desc</a>
             </th>
-
+            <th>
+                Country
+            </th>
+            <th>
+                City
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -50,6 +55,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CompanyDesc)
             </td>
+             <td>
+                    @Html.DisplayFor(modelItem => item.Country.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City.Name)
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CompanyId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.CompanyId">Details</a> |

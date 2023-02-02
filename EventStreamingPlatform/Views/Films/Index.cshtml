@@ -73,7 +73,7 @@
     <h3>Genre with recomandation for <span style="font-style: oblique;">@ViewBag.Film</span></h3>
     <table class="table">
         <tr>
-            <th></th>
+            
             <th>Number</th>
             <th>Name</th>
             <th>Recomandation</th>
@@ -87,9 +87,7 @@
                 selectedRow = "success";
             }
             <tr class="@selectedRow">
-                <td>
-                    @Html.ActionLink("Select", "Index", new { genreId = item.GenreId })
-                </td>
+               
                 <td>
                     @item.GenreId
                 </td>
