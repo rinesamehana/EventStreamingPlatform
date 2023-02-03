@@ -4,7 +4,7 @@
     ViewData["Title"] = "Actor";
 }
 
-<h1>Actor</h1>
+<h2>Actor</h2>
 
 <p>
     <a asp-action="Create"    class="btn btn-primary">Create New</a>
@@ -13,7 +13,7 @@
     <div>
         <p>
             Find by name or lastname:<input type="text" name="searchString"  value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-success my-2 my-sm-0"/>
+            <input type="submit" value="Search" class="btn btn-success"/>
             <a asp-action="Index"  class="btn btn-secondary my-2 my-sm-0"> Back to Full List </a>
         </p>
 

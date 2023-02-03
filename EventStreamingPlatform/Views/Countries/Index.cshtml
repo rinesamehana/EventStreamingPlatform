@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h2>Country</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create"   class="btn btn-primary">Create New</a>
 </p>
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
@@ -16,29 +16,29 @@
                 <th>
                     Find by name:
                     <input type="text" id="searchValue" value="@ViewData["CurrentFilter"]" />
-                    <input type="button" value="Search" class="btn btn-default"
+                    <input type="button" value="Search" class="btn btn-success"
                            onclick="location.href='@Url.Action("Index", "Countries", new { id = "", languageId = ""})?searchString=' + $('#searchValue').val()" />
 
                 </th>
                 <th>
-                    <a class="btn btn-default" href="@Url.Action("Index","Countries", new { id = "", languageId = "", SearchString = "" })">Clear search</a>
+                    <a class="btn btn-secondary my-2 my-sm-0" href="@Url.Action("Index","Countries", new { id = "", languageId = "", SearchString = "" })">Clear search</a>
                 </th>
             </tr>
              
         </table>
     </div>
 </form>
-<table class="table">
+<table class="table table-hover">
     @if (Model.Languages == null)
     {
     <thead>
         <tr>
-                <th><a asp-action="Index" asp-route-sortOrder="@ViewData["CountryNameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a></th>
+                <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["CountryNameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a></th>
             <th>Population</th>
-                <th><a asp-action="Index" asp-route-sortOrder="@ViewData["LanguageSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Languages</a></th>
-            <th>Abbreviation</th>
-            <th>ISO_Code</th>
-            <th></th>
+                <th scope="col" ><a asp-action="Index" asp-route-sortOrder="@ViewData["LanguageSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Languages</a></th>
+            <th scope="col">Abbreviation</th>
+            <th scope="col">ISO_Code</th>
+            <th scope="col"></th>
         </tr>
     </thead>
      }
@@ -46,11 +46,11 @@
     {
         <thead>
             <tr>
-            <th>Name</th>
-            <th>Population</th>
-            <th>Languages</th>
-            <th>Abbreviation</th>
-            <th>ISO_Code</th>
+            <th scope="col">Name</th>
+            <th scope="col">Population</th>
+            <th scope="col">Languages</th>
+            <th scope="col">Abbreviation</th>
+            <th scope="col">ISO_Code</th>
             <th></th>
             </tr>
         </thead>
@@ -86,9 +86,9 @@
 
                 <td>
                   
-                    <a asp-action="Edit" asp-route-id="@item.CountryId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CountryId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CountryId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.CountryId" class="btn btn-primary">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CountryId" class="btn btn-primary" >Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CountryId" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }
@@ -105,14 +105,14 @@
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @prevDisabled">
+   class="btn btn-dark @prevDisabled">
         Previous
     </a>
     <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @nextDisabled">
+   class="btn btn-dark @nextDisabled">
         Next
     </a>
 }
@@ -121,6 +121,7 @@ else
     <a asp-action="Index"
    asp-route-languageId=""
    asp-route-id=""
+    class="btn btn-dark" 
    asp-route-currentFilter="@ViewData["CurrentFilter"]">
         Clear selection
     </a>
