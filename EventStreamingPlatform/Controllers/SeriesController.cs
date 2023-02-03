@@ -30,8 +30,7 @@ namespace EventStreamingPlatform.Controllers
                         .ThenInclude(i => i.Actor)
                      .Include(c => c.SerieMainActors)
                         .ThenInclude(i => i.Actor)
-                .Include(i => i.SerieSeasons)
-                    .ThenInclude(i => i.Season)
+                .Include(i => i.Seasons)
                         .ThenInclude(i => i.Episode)
                  .ToList();
 
@@ -44,8 +43,7 @@ namespace EventStreamingPlatform.Controllers
             viewModel.Seriess = await _context.Series
                     .Include(c => c.Company)
                     .Include(c => c.Language)
-                    .Include(i => i.SerieSeasons)
-                        .ThenInclude(i => i.Season)
+                    .Include(i => i.Seasons)
                             .ThenInclude(i=>i.Episode)
                     .Include(i => i.SerieGenres)
                     .ThenInclude(i => i.Genre)
@@ -57,15 +55,26 @@ namespace EventStreamingPlatform.Controllers
                   .OrderBy(i => i.Title)
                   .ToListAsync();
 
+            //if (id != null)
+            //{
+            //    ViewData["SerieId"] = id.Value;
+            //    Serie serie = viewModel.Seriess.Single(
+            //        i => i.SerieId == id.Value);
+            //    await _context.Entry(serie).Collection(x => x.Seasons).LoadAsync();
+            //    ViewData["Serie"] = serie.Title;
+            //}
             if (id != null)
             {
                 ViewData["SerieId"] = id.Value;
-                Serie serie = viewModel.Seriess.Single(
-                    i => i.SerieId == id.Value);
-                viewModel.Seasons = serie.SerieSeasons.Select(s => s.Season);
-                ViewData["Serie"] = serie.Title;
+                var selectedSerie = viewModel.Seriess.Where(x => x.SerieId == id).Single();
+                ViewData["Serie"] = selectedSerie.Title;
+                await _context.Entry(selectedSerie).Collection(x => x.Seasons).LoadAsync();
+                foreach (Season enrollment in selectedSerie.Seasons)
+                {
+                    await _context.Entry(enrollment).Reference(x => x.Serie).LoadAsync();
+                }
+                viewModel.Seasons = selectedSerie.Seasons;
             }
-
             if (seasonId != null)
             {
                 ViewData["SeasonId"] = seasonId.Value;
@@ -120,11 +129,11 @@ namespace EventStreamingPlatform.Controllers
         public IActionResult Create()
         {
             var serie = new Serie();
-            serie.SerieSeasons = new List<SerieSeason>();
+            
             serie.SerieGenres = new List<SerieGenre>();
             serie.SerieActors = new List<SerieActor>();
             serie.SerieMainActors = new List<SerieMainActor>();
-            PopulateAssignedSeasonData(serie);
+          
             PopulateCompnayDropDownList(serie);
             PopulateLanguageDropDownList(serie);
             PopulateAssignedGenreData(serie);
@@ -136,17 +145,9 @@ namespace EventStreamingPlatform.Controllers
         // POST: Series/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title, Description,CompanyId, LanguageId")] Serie serie, string[] selectedSeasons, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
+        public async Task<IActionResult> Create([Bind("Title, Description,CompanyId, LanguageId")] Serie serie, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
-            if (selectedSeasons != null)
-            {
-                serie.SerieSeasons = new List<SerieSeason>();
-                foreach (var season in selectedSeasons)
-                {
-                    var seasonToAdd = new SerieSeason { SerieId = serie.SerieId, SeasonId = int.Parse(season) };
-                    serie.SerieSeasons.Add(seasonToAdd);
-                }
-            }
+          
             if (selectedGenres != null)
             {
                 serie.SerieGenres = new List<SerieGenre>();
@@ -180,7 +181,7 @@ namespace EventStreamingPlatform.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            PopulateAssignedSeasonData(serie);
+            
             PopulateLanguageDropDownList(serie.LanguageId);
             PopulateCompnayDropDownList(serie.CompanyId);
             PopulateAssignedGenreData(serie);
@@ -201,7 +202,7 @@ namespace EventStreamingPlatform.Controllers
                 .Include(i => i.SerieActors).ThenInclude(i => i.Actor)
                 .Include(i => i.SerieGenres).ThenInclude(i => i.Genre)
                 .Include(i => i.SerieMainActors).ThenInclude(i => i.Actor)
-                .Include(i => i.SerieSeasons).ThenInclude(i => i.Season)
+                
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.SerieId == id);
 
@@ -209,7 +210,7 @@ namespace EventStreamingPlatform.Controllers
             {
                 return NotFound();
             }
-            PopulateAssignedSeasonData(serie);
+           
             PopulateLanguageDropDownList(serie.LanguageId);
             PopulateCompnayDropDownList(serie.CompanyId);
             PopulateAssignedGenreData(serie);
@@ -218,22 +219,7 @@ namespace EventStreamingPlatform.Controllers
             return View(serie);
         }
 
-        private void PopulateAssignedSeasonData(Serie serie)
-        {
-            var allSeries = _context.Seasons;
-            var serieSeasons = new HashSet<int>(serie.SerieSeasons.Select(c => c.SeasonId));
-            var viewModel = new List<AssignedSeasonData>();
-            foreach (var season in allSeries)
-            {
-                viewModel.Add(new AssignedSeasonData
-                {
-                    SeasonId = season.SeasonId,
-                    Name = season.Name,
-                    Assigned = serieSeasons.Contains(season.SeasonId)
-                });
-            }
-            ViewData["Seasons"] = viewModel;
-        }
+       
         private void PopulateAssignedGenreData(Serie serie)
         {
             var allGenres = _context.Genres;
@@ -288,7 +274,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, string[] selectedSeasons, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
+        public async Task<IActionResult> Edit(int? id, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
             if (id == null)
             {
@@ -296,9 +282,6 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var serieToUpdate = await _context.Series
-
-                .Include(i => i.SerieSeasons)
-                    .ThenInclude(i => i.Season)
                 .Include(i => i.SerieActors)
                     .ThenInclude(i => i.Actor)
                 .Include(i => i.SerieMainActors)
@@ -313,7 +296,7 @@ namespace EventStreamingPlatform.Controllers
                 i => i.Title, i => i.Description, c => c.CompanyId, c => c.LanguageId))
             {
 
-                UpdateSerieSeason(selectedSeasons, selectedGenres, selectedActors, selectedMainActors, serieToUpdate);
+                UpdateSerieSeason(selectedGenres, selectedActors, selectedMainActors, serieToUpdate);
                 try
                 {
                     await _context.SaveChangesAsync();
@@ -329,8 +312,8 @@ namespace EventStreamingPlatform.Controllers
             }
             PopulateLanguageDropDownList(serieToUpdate.LanguageId);
             PopulateCompnayDropDownList(serieToUpdate.CompanyId);  
-            UpdateSerieSeason(selectedSeasons, selectedGenres, selectedActors, selectedMainActors, serieToUpdate);
-            PopulateAssignedSeasonData(serieToUpdate);
+            UpdateSerieSeason( selectedGenres, selectedActors, selectedMainActors, serieToUpdate);
+           
             return View(serieToUpdate);
         }
         private void PopulateCompnayDropDownList(object selectedCompany = null)
@@ -348,11 +331,11 @@ namespace EventStreamingPlatform.Controllers
                                 select d;
             ViewBag.LanguageId = new SelectList(languageQuery.AsNoTracking(), "LanguageId", "LanguageName", selectedLanguage);
         }
-        private void UpdateSerieSeason(string[] selectedSeasons, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors, Serie serieToUpdate)
+        private void UpdateSerieSeason(string[] selectedGenres, string[] selectedActors, string[] selectedMainActors, Serie serieToUpdate)
         {
-            if (selectedSeasons == null)
+            if (selectedGenres == null)
             {
-                serieToUpdate.SerieSeasons = new List<SerieSeason>();
+              
                 serieToUpdate.SerieGenres = new List<SerieGenre>();
                 serieToUpdate.SerieActors = new List<SerieActor>();
                 serieToUpdate.SerieMainActors = new List<SerieMainActor>();
@@ -364,27 +347,10 @@ namespace EventStreamingPlatform.Controllers
             var serieGenres = new HashSet<int>(serieToUpdate.SerieGenres.Select(c => c.Genre.GenreId));
             var serieActors = new HashSet<int>(serieToUpdate.SerieActors.Select(c => c.Actor.ActorId));
             var serieMainActors = new HashSet<int>(serieToUpdate.SerieMainActors.Select(c => c.Actor.ActorId));
-            var selectedSeasonsHS = new HashSet<string>(selectedSeasons);
-            var serieSeason = new HashSet<int>(serieToUpdate.SerieSeasons.Select(c => c.Season.SeasonId));
+           
+           
 
-            foreach (var season in _context.Seasons)
-            {
-                if (selectedSeasonsHS.Contains(season.SeasonId.ToString()))
-                {
-                    if (!serieSeason.Contains(season.SeasonId))
-                    {
-                        serieToUpdate.SerieSeasons.Add(new SerieSeason { SerieId = serieToUpdate.SerieId, SeasonId = season.SeasonId });
-                    }
-                }
-                else
-                {
-                    if (serieSeason.Contains(season.SeasonId))
-                    {
-                        SerieSeason seasonToRemove = serieToUpdate.SerieSeasons.FirstOrDefault(i => i.SeasonId == season.SeasonId);
-                        _context.Remove(seasonToRemove);
-                    }
-                }
-            }
+           
             foreach (var genre in _context.Genres)
             {
                 if (selectedGenresHS.Contains(genre.GenreId.ToString()))
@@ -471,7 +437,7 @@ namespace EventStreamingPlatform.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             Serie serie = await _context.Series
-                .Include(i => i.SerieSeasons)
+      
                  .Include(i => i.SerieGenres)
                 .Include(i => i.SerieActors)
                 .Include(i => i.SerieMainActors)

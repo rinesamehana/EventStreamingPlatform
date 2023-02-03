@@ -15,7 +15,9 @@
 
         public virtual Language Language { get; set; }
 
-        public ICollection<SerieSeason> SerieSeasons { get; set; }
+        public ICollection<Season> Seasons { get; set; }
+
+        //public ICollection<SerieSeason> SerieSeasons { get; set; }
         public ICollection<SerieGenre> SerieGenres { get; set; }
         public ICollection<SerieActor> SerieActors { get; set; }
 

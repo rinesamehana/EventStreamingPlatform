@@ -64,9 +64,9 @@
                     }
                 </td>
                 <td>
-                    @foreach (var genre in item.SerieSeasons)
+                    @foreach (var genre in item.Seasons)
                     {
-                        @genre.Season.Name <br />
+                        @genre.Name <br />
                     }
                 </td>
                
@@ -89,7 +89,7 @@
             <th></th>
             <th>Id</th>
             <th>Name</th>
-          
+           
         </tr>
 
         @foreach (var item in Model.Seasons)
@@ -109,7 +109,7 @@
                 <td>
                     @item.Name
                 </td>
-               
+              
             
             </tr>
         }

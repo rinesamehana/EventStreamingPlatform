@@ -123,34 +123,7 @@
                     </table>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <table class="table">
-                        <label asp-for="SerieSeasons" class="control-label">Seasons: </label>
-                        <tr>
-                            @{
-                                int cntttt = 0;
-                                List<EventStreamingPlatform.Models.StreamingViewModel.AssignedSeasonData> seasons = ViewBag.Seasons;
-
-                                foreach (var season in seasons)
-                                {
-                                    if (cntttt++ % 4 == 0)
-                                    {
-                                        @:</tr><tr>
-                                    }
-                                    @:<td>
-                                        <input type="checkbox"
-                                               name="selectedSeasons"
-                                               value="@season.SeasonId"
-                                               @(Html.Raw(season.Assigned ? "checked=\"checked\"" : "")) />
-                                                @season.Name
-                                    @:</td>
-                                }
-                                @:</tr>
-                            }
-                    </table>
-                </div>
-            </div>
+            
             
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EventStreamingPlatform.Data;
 using EventStreamingPlatform.Models;
+using EventStreamingPlatform.Migrations;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -24,6 +25,7 @@ namespace EventStreamingPlatform.Controllers
         {
 
             var season =  _context.Seasons
+                .Include(c => c.Serie)
                 .Include(e => e.Episode)
                  .ToList();
 
@@ -57,6 +59,7 @@ namespace EventStreamingPlatform.Controllers
 
             seasons = _context.Seasons
               .Include(c => c.Episode)
+              .Include(c => c.Serie)
               .AsNoTracking();
 
 
@@ -105,6 +108,8 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var season = await _context.Seasons
+                
+                .Include(c=>c.Serie)
                 .Include(e => e.Episode)    
                 .FirstOrDefaultAsync(m => m.SeasonId == id);
             if (season == null)
@@ -118,6 +123,7 @@ namespace EventStreamingPlatform.Controllers
         // GET: Seasons/Create
         public IActionResult Create()
         {
+            PopulateCountryDropDownList();
             return View();
         }
 
@@ -126,7 +132,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SeasonId,Name")] Season season)
+        public async Task<IActionResult> Create([Bind("SeasonId,Name,Description,SerieId")] Season season)
         {
             if (ModelState.IsValid)
             {
@@ -134,6 +140,7 @@ namespace EventStreamingPlatform.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            PopulateCountryDropDownList(season.SerieId);
             return View(season);
         }
 
@@ -150,15 +157,22 @@ namespace EventStreamingPlatform.Controllers
             {
                 return NotFound();
             }
+            PopulateCountryDropDownList(season.SerieId);
             return View(season);
         }
-
+        private void PopulateCountryDropDownList(object selectedCountry = null)
+        {
+            var countriesQuery = from d in _context.Series
+                                 orderby d.Title
+                                 select d;
+            ViewBag.SerieId = new SelectList(countriesQuery.AsNoTracking(), "SerieId", "Title", selectedCountry);
+        }
         // POST: Seasons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SeasonId,Name")] Season season)
+        public async Task<IActionResult> Edit(int id, [Bind("SeasonId,Name,Description,SerieId")] Season season)
         {
             if (id != season.SeasonId)
             {

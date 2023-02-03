@@ -229,7 +229,7 @@ namespace EventStreamingPlatform.Controllers
             var seasonsQuery = from d in _context.Seasons
                                       orderby d.Name
                                       select d;
-            ViewBag.SeasonId = new SelectList(seasonsQuery.AsNoTracking(), "SeasonId", "Name", selectedSeason);
+            ViewBag.SeasonId = new SelectList(seasonsQuery.AsNoTracking(), "SeasonId", "Description",  selectedSeason);
         }
         private void PopulateSeriesDropDownList(object selectedSerie = null)
         {
