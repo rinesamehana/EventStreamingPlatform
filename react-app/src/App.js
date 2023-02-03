@@ -17,7 +17,7 @@ function App() {
           <Route path='/singlepage/:id' component={SinglePage} exact />
           <Route path='/Movies' component={Movies} />
         </Switch>
-        {/* <Footer /> */}
+        <Footer />
       </Router>
     </>
   )

@@ -27,22 +27,22 @@ return (
  
    
  <div className="title">
-        <h1>Our Towns</h1>
+        <h1>Our Movies</h1>
       </div>
-      <div className="neighborhood">
-        <div className="featuredd">
-          {films.map((qyteti) => {
+      <div className="movies">
+        <div className="movie">
+          {films.map((filmi) => {
             return (
-              <div className="featureddItem" key={qyteti.id}>
+              <div className="movieItem" key={filmi.id}>
                 {/* <img
-                  src={qyteti.photo}
+                  src={filmi.photo}
                   alt=""
                   className="featuredImg"
                 /> */}
-                <div className="featureddTitles">
-                  <h1>{qyteti.title}</h1>
-                  <h1>{qyteti.company.companyName}</h1>
-                  <h1>{qyteti.language.name}</h1>
+                <div className="movieTitles">
+                  <h1>{filmi.title}</h1>
+                  <h1>{filmi.company.companyName}</h1>
+                  <h1>{filmi.language.name}</h1>
             
                 </div>
               </div>

@@ -52,7 +52,8 @@
                                         @:</tr><tr>
                                     }
                                     @:<td>
-                                        <input type="checkbox"
+                                        <input class="form-check-input"
+                                               type="checkbox"
                                                name="selectedGenres"
                                                value="@genre.GenreId"
                                                @(Html.Raw(genre.Assigned ? "checked=\"checked\"" : "")) />
@@ -80,7 +81,8 @@
                                         @:</tr><tr>
                                     }
                                     @:<td>
-                                        <input type="checkbox"
+                                        <input class="form-check-input"
+                                              type="checkbox"
                                                name="selectedActors"
                                                value="@actor.ActorId"
                                                @(Html.Raw(actor.Assigned ? "checked=\"checked\"" : "")) />
@@ -108,7 +110,8 @@
                                         @:</tr><tr>
                                     }
                                     @:<td>
-                                        <input type="checkbox"
+                                        <input class="form-check-input"
+                                               type="checkbox"
                                                name="selectedMainActors"
                                                value="@actor.ActorId"
                                                @(Html.Raw(actor.Assigned ? "checked=\"checked\"" : "")) />
