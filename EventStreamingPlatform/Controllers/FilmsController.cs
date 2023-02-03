@@ -69,7 +69,7 @@ namespace EventStreamingPlatform.Controllers
             ViewData["TitleSortParm"] = sortOrder == "Title" ? "Title_desc" : "Title";
             ViewData["CompanySortParm"] = sortOrder == "CompanyName" ? "CompanyName_desc" : "CompanyName";
             //ViewData["LanguageSortParm"] = sortOrder == "EmailAddress" ? "EmailAddress_desc" : "EmailAddress";
-            ViewData["GenresSortParm"] = sortOrder == "Name" ? "Name_desc" : "Name";
+            ViewData["GenresSortParm"] = sortOrder == "Genre" ? "Genre_desc" : "Genre";
             //ViewData["MainActorsSortParm"] = sortOrder == "Title" ? "Title_desc" : "Title";
             //ViewData["OtherActorsSortParm"] = sortOrder == "HireDate" ? "HireDate_desc" : "HireDate";
 
@@ -97,7 +97,7 @@ namespace EventStreamingPlatform.Controllers
             {
                 officeAssignment = true;
             }
-            else if (sortOrder.Equals("Name_desc") || sortOrder.Equals("Name"))
+            else if (sortOrder.Equals("Genre_desc") || sortOrder.Equals("Genre"))
             {
                 courseAssignment = true;
             }
@@ -129,7 +129,7 @@ namespace EventStreamingPlatform.Controllers
                         .ThenInclude(i => i.Actor)
                         .OrderBy(i => i.Title)
                         .Where(s => s.Title.Contains(searchString))
-                        .OrderByDescending(e => EF.Property<object>(e.Company, sortOrder))
+                        .OrderByDescending(e => EF.Property<object>(e.FilmGenres, sortOrder))
                         .ToListAsync();
                     }
                     else if (courseAssignment)
@@ -185,7 +185,7 @@ namespace EventStreamingPlatform.Controllers
                      .ThenInclude(i => i.Actor)
                      .OrderBy(i => i.Title)
                      .Where(s => s.Title.Contains(searchString))
-                      .OrderBy(e => EF.Property<object>(e.Company, sortOrder))
+                      .OrderBy(e => EF.Property<object>(e.Title, sortOrder))
                        .ToListAsync();
                     }
                     else if (courseAssignment)
@@ -242,7 +242,7 @@ namespace EventStreamingPlatform.Controllers
                     .ThenInclude(i => i.Actor)
                     .Include(c => c.FilmMainActors)
                     .ThenInclude(i => i.Actor)
-                        .OrderByDescending(e => EF.Property<object>(e.Company, sortOrder))
+                        .OrderByDescending(e => EF.Property<object>(e.Title, sortOrder))
                         .ToListAsync();
                     }
                     else if (courseAssignment)
