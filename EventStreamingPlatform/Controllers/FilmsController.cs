@@ -129,7 +129,7 @@ namespace EventStreamingPlatform.Controllers
                         .ThenInclude(i => i.Actor)
                         .OrderBy(i => i.Title)
                         .Where(s => s.Title.Contains(searchString))
-                        .OrderByDescending(e => EF.Property<object>(e.FilmGenres, sortOrder))
+                        .OrderByDescending(e => EF.Property<object>(e.Company, sortOrder))
                         .ToListAsync();
                     }
                     else if (courseAssignment)
@@ -242,7 +242,7 @@ namespace EventStreamingPlatform.Controllers
                     .ThenInclude(i => i.Actor)
                     .Include(c => c.FilmMainActors)
                     .ThenInclude(i => i.Actor)
-                        .OrderByDescending(e => EF.Property<object>(e.Title, sortOrder))
+                        .OrderByDescending(e => EF.Property<object>(e.Company, sortOrder))
                         .ToListAsync();
                     }
                     else if (courseAssignment)
@@ -291,7 +291,7 @@ namespace EventStreamingPlatform.Controllers
                    .ThenInclude(i => i.Actor)
                    .Include(c => c.FilmMainActors)
                    .ThenInclude(i => i.Actor)
-                       .OrderBy(e => EF.Property<object>(e.FilmGenres, sortOrder))
+                       .OrderBy(e => EF.Property<object>(e.Company, sortOrder))
                         .ToListAsync();
                     }
                     else if (courseAssignment)
@@ -341,8 +341,8 @@ namespace EventStreamingPlatform.Controllers
             if (id != null)
             {
                 ViewData["FilmId"] = id.Value;
-                Film film = viewModel.Films.Where(
-                    i => i.ID == id.Value).Single();
+                Film film = viewModel.Films.Single(
+                    i => i.ID == id.Value);
                 viewModel.Genres = film.FilmGenres.Select(s => s.Genre);
                //ViewData["Film"] = film.Title;
             }
