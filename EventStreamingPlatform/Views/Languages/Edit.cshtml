@@ -4,9 +4,9 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<br />
+<h4>Edit Language</h4>
 
-<h4>Language</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -23,15 +23,16 @@
                 <input asp-for="ISO_Code" class="form-control" />
                 <span asp-validation-for="ISO_Code" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index"  class="btn btn-secondary">Back to List</a>
 </div>
 
 @section Scripts {

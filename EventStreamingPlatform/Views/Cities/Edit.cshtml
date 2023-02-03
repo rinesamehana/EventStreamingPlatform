@@ -4,9 +4,8 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>City</h4>
+<br />
+<h4>Edit City</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -23,15 +22,16 @@
                 <select asp-for="CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
                 <span asp-validation-for="CountryId" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
 
 @section Scripts {
