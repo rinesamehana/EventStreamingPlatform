@@ -344,9 +344,9 @@ namespace EventStreamingPlatform.Controllers
         private void PopulateLanguageDropDownList(object selectedLanguage = null)
         {
             var languageQuery = from d in _context.Languages
-                                orderby d.Name
+                                orderby d.LanguageName
                                 select d;
-            ViewBag.LanguageId = new SelectList(languageQuery.AsNoTracking(), "LanguageId", "Name", selectedLanguage);
+            ViewBag.LanguageId = new SelectList(languageQuery.AsNoTracking(), "LanguageId", "LanguageName", selectedLanguage);
         }
         private void UpdateSerieSeason(string[] selectedSeasons, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors, Serie serieToUpdate)
         {

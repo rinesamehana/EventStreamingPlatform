@@ -3,7 +3,7 @@
     public class Language
     {
         public int LanguageId { get; set; }
-        public string Name { get; set; }
+        public string LanguageName { get; set; }
 
         public string ISO_Code {get;set;}
 

@@ -5,6 +5,7 @@ using EventStreamingPlatform.Data;
 using EventStreamingPlatform.Models;
 using EventStreamingPlatform.Models.StreamingViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Diagnostics;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -29,29 +30,159 @@ namespace EventStreamingPlatform.Controllers
             return Json(new { data = countries });
         }
         // GET: Films
-        public async Task<IActionResult> Index(int? id, int? languageId)
+        public async Task<IActionResult> Index(int? id, int? languageId,
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
-            var viewModel = new CountryIndexData();
-            viewModel.Countries = await _context.Countries
-                  .Include(i => i.CountryLanguages)
-                    .ThenInclude(i => i.Language)
-                  .OrderBy(i => i.Name)
-                  .ToListAsync();
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["CountryNameSortParm"] = sortOrder == "Name" ? "Name_desc" : "Name";
+            ViewData["LanguageSortParm"] = sortOrder == "LanguageName" ? "LanguageName_desc" : "LanguageName";
+
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+            var countries = new List<Country>();
+
+      
+            bool languages = false;
+            if (string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "Name";
+            }
+         
+            else if (sortOrder.Equals("LanguageName_desc") || sortOrder.Equals("LanguageName"))
+            {
+                languages = true;
+            }
+
+            Debug.WriteLine(sortOrder);
+
+            bool descending = false;
+            if (sortOrder.EndsWith("_desc"))
+            {
+                sortOrder = sortOrder.Substring(0, sortOrder.Length - 5);
+                descending = true;
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                if (descending)
+                {
+                    
+                    if (languages)
+                    {
+                        countries = await _context.Countries
+                        .Include(i => i.CountryLanguages)
+                            .ThenInclude(i => i.Language)
+                        .Where(s => s.Name.Contains(searchString))
+                        .ToListAsync();
+
+                        countries.OrderByDescending(e => EF.Property<object>(e.CountryLanguages.AsQueryable().Include(i => i.Language), sortOrder));
+                    }
+                    else
+                    {
+                        countries = await _context.Countries
+                        .Include(i => i.CountryLanguages)
+                            .ThenInclude(i => i.Language)
+                        .Where(s => s.Name.Contains(searchString))
+                        .OrderByDescending(e => EF.Property<object>(e, sortOrder))
+                        .ToListAsync();
+                    }
+                }
+                else
+                {
+                    if (languages)
+                    {
+                        countries = await _context.Countries
+                        .Include(i => i.CountryLanguages)
+                            .ThenInclude(i => i.Language)
+                        .Where(s => s.Name.Contains(searchString))
+                        .ToListAsync();
+
+                        countries.OrderBy(e => EF.Property<object>(e.CountryLanguages.AsQueryable().Include(i => i.Language), sortOrder));
+                    }
+                    else
+                    {
+                        countries = await _context.Countries
+                        .Include(i => i.CountryLanguages)
+                            .ThenInclude(i => i.Language)
+                        .Where(s => s.Name.Contains(searchString))
+                        .OrderBy(e => EF.Property<object>(e, sortOrder))
+                        .ToListAsync();
+                    }
+                }
+            }
+            else
+            {
+                if (descending)
+                {
+                    if (languages)
+                    {
+                        countries = await _context.Countries
+                            .Include(i => i.CountryLanguages)
+                                .ThenInclude(i => i.Language)
+                            .ToListAsync();
+
+                        countries.OrderByDescending(e => EF.Property<object>(e.CountryLanguages.AsQueryable().Include(i => i.Language), sortOrder));
+                    }
+                    else
+                    {
+                        countries = await _context.Countries
+                        .Include(i => i.CountryLanguages)
+                            .ThenInclude(i => i.Language)
+                        .OrderByDescending(e => EF.Property<object>(e, sortOrder))
+                        .ToListAsync();
+                    }
+                }
+                else
+                {
+                    if (languages)
+                    {
+                        countries = await _context.Countries
+                        .Include(i => i.CountryLanguages)
+                                .ThenInclude(i => i.Language)
+                        .ToListAsync();
+
+                        countries.OrderBy(e => EF.Property<object>(e.CountryLanguages.AsQueryable().Include(i => i.Language), sortOrder));
+                    }
+                    else
+                    {
+                        countries = await _context.Countries
+                        .Include(i => i.CountryLanguages)
+                                .ThenInclude(i => i.Language)
+                        .OrderBy(e => EF.Property<object>(e, sortOrder))
+                        .ToListAsync();
+                    }
+                }
+            }
+
+            int pageSize = 3;
+            var viewModel = PagedCountryIndexData<Country>.Create(countries, pageNumber ?? 1, pageSize, id);
 
             if (id != null)
             {
                 ViewData["CountryId"] = id.Value;
-                Country country = viewModel.Countries.Single(
-                    i => i.CountryId == id.Value);
+                Country country = viewModel.Countries.Where(
+                    i => i.CountryId == id.Value).Single();
                 viewModel.Languages = country.CountryLanguages.Select(s => s.Language);
-                ViewData["Country"] = country.Name;
+                //ViewData["Country"] = country.Name;
             }
 
-            if (languageId != null)
+            if (languageId != null && languageId!=null)
             {
                 ViewData["LanguageId"] = languageId.Value;
                 var selectedLanguage = viewModel.Languages.Where(x => x.LanguageId == languageId).Single();
-                ViewData["Language"] = selectedLanguage.Name;
+
+                //ViewData["Language"] = selectedLanguage.LanguageName;
 
             }
 
@@ -143,7 +274,7 @@ namespace EventStreamingPlatform.Controllers
                 viewModel.Add(new LanguageAssignedData
                 {
                     LanguageId = language.LanguageId,
-                    Name = language.Name,
+                    LanguageName = language.LanguageName,
                     Assigned = filmLanguages.Contains(language.LanguageId)
                 });
             }

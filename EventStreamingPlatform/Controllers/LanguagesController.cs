@@ -36,7 +36,7 @@ namespace EventStreamingPlatform.Controllers
              int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "nameDesc" : "";
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "LanguageNameDesc" : "";
             ViewData["IsocodeSortParam"] = sortOrder == "isocode" ? "isocodeDesc" : "isocode";
 
             if (searchString != null)
@@ -56,13 +56,13 @@ namespace EventStreamingPlatform.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                languages = languages.Where(a => a.Name.Contains(searchString) || a.ISO_Code.Contains(searchString));
+                languages = languages.Where(a => a.LanguageName.Contains(searchString) || a.ISO_Code.Contains(searchString));
             }
 
             switch (sortOrder)
             {
                 case "nameDesc":
-                    languages = languages.OrderByDescending(a => a.Name);
+                    languages = languages.OrderByDescending(a => a.LanguageName);
                     break;
 
                 case "isocode":
@@ -74,7 +74,7 @@ namespace EventStreamingPlatform.Controllers
                     break;
 
                 default:
-                    languages = languages.OrderBy(a => a.Name);
+                    languages = languages.OrderBy(a => a.LanguageName);
                     break;
             }
 
@@ -116,7 +116,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LanguageId,Name,ISO_Code")] Language language)
+        public async Task<IActionResult> Create([Bind("LanguageId,LanguageName,ISO_Code")] Language language)
         {
             if (ModelState.IsValid)
             {
@@ -148,7 +148,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LanguageId,Name,ISO_Code")] Language language)
+        public async Task<IActionResult> Edit(int id, [Bind("LanguageId,LanguageName,ISO_Code")] Language language)
         {
             if (id != language.LanguageId)
             {

@@ -24,7 +24,7 @@
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Name</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">LanguageName</a>
             </th>
             <th>
                <a asp-action="Index" asp-route-sortOrder="@ViewData["IsocodeSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">ISO Code</a>
@@ -36,7 +36,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.LanguageName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ISO_Code)
