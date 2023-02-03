@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
-
+using Microsoft.AspNetCore.Session;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,8 +25,18 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("https://localhost:44337/").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
     });
 });
+//builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(36);
+    options.Cookie.HttpOnly = true;
+});
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+
+
 
 var app = builder.Build();
 
@@ -54,7 +64,7 @@ app.UseCors(x => x
            .AllowAnyHeader());
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using EventStreamingPlatform.Data;
 using Microsoft.Extensions.Logging;
 
+
 namespace EventStreamingPlatform.Controllers
 {
     public class HomeController : Controller
@@ -17,14 +18,16 @@ namespace EventStreamingPlatform.Controllers
             _logger = logger;
             _context = context;
         }
-
+       
         public IActionResult Index()
         {
+            HttpContext.Session.SetInt32("MySessionKey", 123);
             return View();
         }
 
         public IActionResult Privacy()
         {
+            var sessionValue = HttpContext.Session.GetInt32("MySessionKey");
             return View();
         }
 
@@ -33,5 +36,6 @@ namespace EventStreamingPlatform.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+   
     }
 }
