@@ -4,13 +4,16 @@
     ViewData["Title"] = "Delete";
 }
 
-<h2>Delete</h2>
+
 
 <p class="text-danger">@ViewData["ConcurrencyErrorMessage"]</p>
 
+<br />
+<br />
+
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Recomandation</h4>
+   
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -38,8 +41,8 @@
         <input type="hidden" asp-for="RecomandationId" />
         <input type="hidden" asp-for="RowVersion" />
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            <a asp-action="Index">Back to List</a>
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            <a asp-action="Index" class="btn btn-primary">Back to List</a>
         </div>
     </form>
 </div>

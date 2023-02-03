@@ -7,7 +7,7 @@
 <h2>Films</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create"   class="btn btn-primary">Create New</a>
 </p>
 
 <form asp-action="Index" method="get">
@@ -17,12 +17,12 @@
                 <th>
                     Find by name:
                     <input type="text" id="searchValue" value="@ViewData["CurrentFilter"]" />
-                    <input type="button" value="Search" class="btn btn-default"
+                    <input type="button" value="Search"  class="btn btn-success"
                            onclick="location.href='@Url.Action("Index", "Films", new { id = "", genreId = ""})?searchString=' + $('#searchValue').val()" />
 
                 </th>
                 <th>
-                    <a class="btn btn-default" href="@Url.Action("Index","Films", new { id = "", genreId = "", SearchString = "" })">Clear search</a>
+                    <a class="btn btn-secondary my-2 my-sm-0" href="@Url.Action("Index","Films", new { id = "", genreId = "", SearchString = "" })">Clear search</a>
                 </th>
             </tr>
         </table>
@@ -34,39 +34,39 @@
 
 
 
-<table class="table">
+<table class="table table-hover">
      @if (Model.Genres == null)
     {
     <thead>
         <tr>
-            <th>
+            <th scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Title</a>
              </th>
-            <th><a asp-action="Index" asp-route-sortOrder="@ViewData["CompanySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Company</a>
+            <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["CompanySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Company</a>
                 </th>
-            <th>Language</th>
-            <th>
+            <th scope="col">Language</th>
+            <th scope="col">
                     <a asp-action="Index" asp-route-sortOrder="@ViewData["GenresSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Genres</a>
                 </th>
-            <th>Main Actors</th>
-            <th>Others Actors</th>
-            <th></th>
+            <th scope="col">Main Actors</th>
+            <th scope="col">Others Actors</th>
+            <th scope="col"></th>
         </tr>
     </thead> }
     else
     {
  <thead>
         <tr>
-            <th>
+            <th scope="col">
                 Name
              </th>
-            <th>Company</th>
-            <th>Language</th>
-            <th>
+            <th scope="col">Company</th>
+            <th scope="col">Language</th>
+            <th scope="col">
                    Genres
                 </th>
-            <th>Main Actors</th>
-            <th>Others Actors</th>
+            <th scope="col">Main Actors</th>
+            <th scope="col">Others Actors</th>
             <th></th>
         </tr>
     </thead>}
@@ -107,10 +107,10 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    <a asp-action="Index" asp-route-id="@item.ID" class="btn btn-primary">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary"> Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-primary">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
            }
@@ -123,9 +123,9 @@
     <table class="table">
         <tr>
             
-            <th>Number</th>
-            <th>Name</th>
-            <th>Recomandation</th>
+            <th scope="col"> Number</th>
+            <th scope="col">Name</th>
+            <th scope="col">Recomandation</th>
         </tr>
 
         @foreach (var item in Model.Genres)
@@ -163,14 +163,14 @@
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.PageIndex - 1)"
        asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn btn-default @prevDisabled">
+       class="btn btn-dark @prevDisabled">
         Previous
     </a>
     <a asp-action="Index"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.PageIndex + 1)"
        asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn btn-default @nextDisabled">
+       class="btn btn-dark @nextDisabled">
         Next
     </a>
 }
@@ -179,6 +179,7 @@ else
     <a asp-action="Index"
        asp-route-genreId=""
        asp-route-id=""
+       class="btn btn-dark" 
        asp-route-currentFilter="@ViewData["CurrentFilter"]">
         Clear selection
     </a>

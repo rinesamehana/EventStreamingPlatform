@@ -4,22 +4,22 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h2>Serie</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create"   class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Desc</th>
-            <th>Company</th>
-            <th>Language</th>
-            <th>Genres</th>
-            <th>Main Actors</th>
-            <th>Others Actors</th>
-            <th>Season</th>
+            <th scope="col">Title</th>
+            <th scope="col">Desc</th>
+            <th scope="col">Company</th>
+            <th scope="col">Language</th>
+            <th scope="col">Genres</th>
+            <th scope="col">Main Actors</th>
+            <th scope="col">Others Actors</th>
+            <th scope="col">Season</th>
 
             <th></th>
         </tr>
@@ -72,10 +72,10 @@
                
              
                 <td>
-                    <a asp-action="Index" asp-route-id="@item.SerieId">Select</a> |
-                    <a asp-action="Edit" asp-route-id="@item.SerieId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.SerieId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.SerieId">Delete</a>
+                    <a asp-action="Index" asp-route-id="@item.SerieId" class="btn btn-primary">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.SerieId" class="btn btn-primary">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.SerieId" class="btn btn-primary">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.SerieId" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }
@@ -87,8 +87,8 @@
     <table class="table">
         <tr>
             <th></th>
-            <th>Id</th>
-            <th>Name</th>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
            
         </tr>
 
@@ -123,9 +123,9 @@
     </h3>
     <table class="table">
         <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
         </tr>
         @foreach (var item in Model.Episodes)
         {

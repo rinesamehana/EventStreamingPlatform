@@ -4,35 +4,42 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h2>Episode</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create"  class="btn btn-primary">Create New</a>
 </p>
 <form asp-action="Index" method="get">
-    <div class="form-action no-color">
-        <p>
-            Find by name or surname:<input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-success" />
-            <a asp-action="Index"> Back to Full List </a>
-        </p>
+    <div class="form-actions no-color">
+        <table class="table">
+            <tr>
+                <th>
+                    Find by name:<input type="text" name="searchString" value="@ViewData["CurrentFilter"]"/>
+            <input type="submit" value="Search" class="btn btn-success"/>
+            <a asp-action="Index"   class="btn btn-secondary my-2 my-sm-0"> Back to Full List </a>
 
+                </th>
+               
+            </tr>
+             
+        </table>
     </div>
 
+
 </form>
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
-            <th>
+            <th  scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Name</a>
             </th>
-            <th>
+            <th  scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["DescriptionSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Description</a>
             </th>
-            <th>
+            <th  scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["SeasonSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Season</a>
             </th>
-            <th>
+            <th  scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["SerieSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Serie</a>
             </th>
             <th>
@@ -58,9 +65,9 @@
                     @Html.DisplayFor(modelItem => item.Serie.Title)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.EpisodeId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.EpisodeId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.EpisodeId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.EpisodeId" class="btn btn-primary">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.EpisodeId" class="btn btn-primary">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.EpisodeId" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }
@@ -75,13 +82,13 @@
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex-1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @prevDisabled">
+   class="btn btn-dark @prevDisabled">
     Previous
 </a>
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex+1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @nextDisabled">
+   class="btn btn-dark @nextDisabled">
     Next
 </a>
