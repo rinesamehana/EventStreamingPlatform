@@ -18,7 +18,7 @@ namespace EventStreamingPlatform.Data
 
         public DbSet<Company> Company { get; set; }
         public DbSet<Language> Languages { get; set; }
-
+        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Actor> Actors { get; set; }

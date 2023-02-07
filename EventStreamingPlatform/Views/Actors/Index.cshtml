@@ -44,6 +44,9 @@
             <th scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["BiographySortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]"> Biography</a>
             </th>
+             <th scope="col">
+                PhotoLink
+            </th>
             <th scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["GenderSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]"> Gender</a>
             </th>
@@ -71,6 +74,9 @@
             </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Biography)
+                </td>
+                 <td>
+                    @Html.DisplayFor(modelItem => item.PhotoLink)
                 </td>
                       <td>
                     @Html.DisplayFor(modelItem => item.Gender.Name)

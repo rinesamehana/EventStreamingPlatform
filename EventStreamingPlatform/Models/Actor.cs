@@ -12,6 +12,7 @@
 
         public string Biography { get; set; }
 
+        public string PhotoLink { get; set; }
         public int? GenderId { get; set; }
 
         public Gender Gender { get; set; }

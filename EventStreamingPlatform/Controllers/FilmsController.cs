@@ -403,7 +403,7 @@ namespace EventStreamingPlatform.Controllers
         // POST: Films/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title, CompanyId, LanguageId")] Film film, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
+        public async Task<IActionResult> Create([Bind("Title, Description,Duration,Rating , VideoLink, PhotoLink, RealiseDate ,Director, CompanyId, LanguageId")] Film film, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
             if (selectedGenres != null)
             {
@@ -546,7 +546,7 @@ namespace EventStreamingPlatform.Controllers
             if (await TryUpdateModelAsync<Film>(
                 filmToUpdate,
                 "",
-                i => i.Title, c => c.CompanyId, c => c.LanguageId))
+                i => i.Title, c => c.Description, ch => ch.Duration, ch => ch.Rating, ch => ch.VideoLink, ch => ch.PhotoLink, ch => ch.RealiseDate,c=>c.Director, c => c.CompanyId, c => c.LanguageId))
             {
 
                 UpdateFilmGenre(selectedGenres, selectedActors, selectedMainActors, filmToUpdate);

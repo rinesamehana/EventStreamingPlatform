@@ -42,6 +42,11 @@
             <th scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Title</a>
              </th>
+              <th scope="col">Description</th>
+               <th scope="col">Duration</th>
+                <th scope="col">Rating</th>
+               <th scope="col">RealiseDate</th>
+               <th scope="col">Director</th>
             <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["CompanySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Company</a>
                 </th>
             <th scope="col">Language</th>
@@ -81,6 +86,21 @@
             <tr class="@selectedRow">
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                 <td>
+                    @Html.DisplayFor(modelItem => item.Duration)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td>
+                 <td>
+                    @Html.DisplayFor(modelItem => item.RealiseDate)
+                </td>
+                 <td>
+                    @Html.DisplayFor(modelItem => item.Director)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Company.CompanyName)

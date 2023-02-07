@@ -8,6 +8,10 @@
 
         public string Description { get; set; }
 
+        public string Director { get; set; }
+
+        public string PhotoLink { get; set; }
+
         public int? CompanyId { get; set; }
 
         public virtual Company Company { get; set; }

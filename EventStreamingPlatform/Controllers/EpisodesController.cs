@@ -59,7 +59,7 @@ namespace EventStreamingPlatform.Controllers
             var episodes = from a in _context.Episodes select a;
 
             episodes = _context.Episodes
-      
+      .Include(c=>c.Comments)
                 .Include(c => c.Season)
                 .Include(c=>c.Serie)
                 .AsNoTracking();
@@ -157,11 +157,11 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EpisodeId,Name,Description,SeasonId,SerieId,RowVersion")] Episode episode)
+        public async Task<IActionResult> Create([Bind("EpisodeId,Name,Description,Duration,Rating , VideoLink, PhotoLink, RealiseDate , SeasonId,SerieId,RowVersion")] Episode episode)
         {
             if (ModelState.IsValid)
             {
-                episode.RealiseDate = DateTime.Now;
+                
                 _context.Add(episode);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -208,7 +208,7 @@ namespace EventStreamingPlatform.Controllers
 
             if (await TryUpdateModelAsync<Episode>(episodeToUpdate,
                 "",
-                c => c.Name, c=>c.Description, c => c.SeasonId, d=>d.SerieId))
+                c => c.Name, c=>c.Description,ch=>ch.Duration, ch => ch.Rating, ch => ch.VideoLink, ch => ch.PhotoLink, ch => ch.RealiseDate, c => c.SeasonId, d=>d.SerieId))
             {
                 try
                 {

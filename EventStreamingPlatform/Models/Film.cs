@@ -10,6 +10,18 @@ namespace EventStreamingPlatform.Models
         public int ID { get; set; }
 
         public string Title { get; set; }
+
+        public string Description { get; set; }
+        public string Duration { get; set; }
+
+        public string Rating { get; set; }
+        public string VideoLink { get; set; }
+
+        public string PhotoLink { get; set; }
+
+        public DateTime RealiseDate { get; set; }
+        public string Director { get; set; }
+
         [ForeignKey("CompanyId")]
         public int? CompanyId { get; set; }
      

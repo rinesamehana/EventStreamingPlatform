@@ -145,7 +145,7 @@ namespace EventStreamingPlatform.Controllers
         // POST: Series/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title, Description,CompanyId, LanguageId")] Serie serie, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
+        public async Task<IActionResult> Create([Bind("Title, Description,Director, PhotoLink ,CompanyId, LanguageId")] Serie serie, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
           
             if (selectedGenres != null)
@@ -293,7 +293,7 @@ namespace EventStreamingPlatform.Controllers
             if (await TryUpdateModelAsync<Serie>(
                 serieToUpdate,
                 "",
-                i => i.Title, i => i.Description, c => c.CompanyId, c => c.LanguageId))
+                i => i.Title, i => i.Description, i => i.Director, i => i.PhotoLink, c => c.CompanyId, c => c.LanguageId))
             {
 
                 UpdateSerieSeason(selectedGenres, selectedActors, selectedMainActors, serieToUpdate);

@@ -179,7 +179,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ActorId,Name,LastName,Age, Biography, GenderId, CountryId,CityId")] Actor actor)
+        public async Task<IActionResult> Create([Bind("ActorId,Name,LastName,Age, Biography, PhotoLink, GenderId, CountryId,CityId")] Actor actor)
         {
             if (ModelState.IsValid)
             {
@@ -227,7 +227,7 @@ namespace EventStreamingPlatform.Controllers
 
             if (await TryUpdateModelAsync<Actor>(actorToUpdate,
                 "",
-                c => c.Name, c => c.LastName, c => c.Age, c => c.Biography, c => c.GenderId, c => c.CountryId, c => c.CityId))
+                c => c.Name, c => c.LastName, c => c.Age, c => c.Biography, c=>c.PhotoLink, c => c.GenderId, c => c.CountryId, c => c.CityId))
             {
                 try
                 {

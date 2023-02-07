@@ -14,6 +14,7 @@
         <tr>
             <th scope="col">Title</th>
             <th scope="col">Desc</th>
+            <th scope="col">Director</th>
             <th scope="col">Company</th>
             <th scope="col">Language</th>
             <th scope="col">Genres</th>
@@ -38,6 +39,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Director)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Company.CompanyName)

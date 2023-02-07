@@ -16,6 +16,13 @@ namespace EventStreamingPlatform.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
+        public string Duration { get; set; }
+
+        public string Rating { get; set; }
+        public string VideoLink { get; set; }
+
+        public string PhotoLink { get; set; }
+
         public DateTime RealiseDate { get; set; }
         public byte[] RowVersion { get; set; }
         
