@@ -26,30 +26,56 @@ return (
     <>
  
    
- <div className="title">
-        <h1>Our Movies</h1>
-      </div>
-      <div className="movies">
-        <div className="movie">
-          {films.map((filmi) => {
-            return (
-              <div className="movieItem" key={filmi.id}>
-                {/* <img
-                  src={filmi.photo}
-                  alt=""
-                  className="featuredImg"
-                /> */}
-                <div className="movieTitles">
-                  <h1>{filmi.title}</h1>
-                  <h1>{filmi.company.companyName}</h1>
-                  <h1>{filmi.language.name}</h1>
-            
+ <section class="top-rated">
+        <div class="container">
+
+         <br></br>
+
+          <h2 class="h2 section-title">Our Movies</h2>
+
+          <ul class="movies-list">
+
+           
+            <li>
+              <div class="movie-card">
+
+                <a href="./singlepage/1">
+                  <figure class="card-banner">
+                    <img src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/thumbnail/xlarge/titanic-et00008457-03-12-2017-06-34-18.jpg" alt="The King's Man movie poster"/>
+                  </figure>
+                </a>
+
+                <div class="title-wrapper">
+                  <a href="./singlepage/1">
+                    <h3 class="card-title">The King's Man</h3>
+                  </a>
+
+                  <time datetime="2021">2021</time>
                 </div>
+
+                <div class="card-meta">
+                  <div class="badge badge-outline">HD</div>
+
+                  <div class="duration">
+                    <ion-icon name="time-outline"></ion-icon>
+
+                    <time datetime="PT131M">131 min</time>
+                  </div>
+
+                  <div class="rating">
+                    <ion-icon name="star"></ion-icon>
+
+                    <data>7.0</data>
+                  </div>
+                </div>
+
               </div>
-            );
-          })}
+            </li>
+
+          </ul>
+
         </div>
-      </div>
+      </section>
     </>
   );
   }
