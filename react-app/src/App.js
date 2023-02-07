@@ -7,6 +7,7 @@ import Footer from "./components/footer/Footer"
 import Movies from "./components/moviespage/Movies"
 
 
+
 function App() {
   return (
     <>
@@ -16,6 +17,7 @@ function App() {
           <Route exact path='/' component={HomePage} />
           <Route path='/singlepage/:id' component={SinglePage} exact />
           <Route path='/Movies' component={Movies} />
+          
         </Switch>
         <Footer />
       </Router>
