@@ -18,6 +18,8 @@ namespace EventStreamingPlatform.Data
 
         public DbSet<Company> Company { get; set; }
         public DbSet<Language> Languages { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Actor> Actors { get; set; }
 
@@ -103,6 +105,12 @@ namespace EventStreamingPlatform.Data
      .WithOne(c => c.Company)
      .IsRequired(false)
      .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Episode>()
+ .HasMany(i => i.Comments)
+ .WithOne(c => c.Episode)
+ .IsRequired(false)
+ .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<City>()
   .HasOne(i => i.Country)

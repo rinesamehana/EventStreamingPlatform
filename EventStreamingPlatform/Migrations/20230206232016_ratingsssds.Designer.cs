@@ -4,6 +4,7 @@ using EventStreamingPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventStreamingPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230206232016_ratingsssds")]
+    partial class ratingsssds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,7 +181,7 @@ namespace EventStreamingPlatform.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EpisodeId")
+                    b.Property<int>("EpisodeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("LastUpdatedDate")
@@ -276,9 +278,6 @@ namespace EventStreamingPlatform.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -748,7 +747,8 @@ namespace EventStreamingPlatform.Migrations
                     b.HasOne("EventStreamingPlatform.Models.Episode", "Episode")
                         .WithMany("Comments")
                         .HasForeignKey("EpisodeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Author");
 

@@ -59,6 +59,7 @@ namespace EventStreamingPlatform.Controllers
             var episodes = from a in _context.Episodes select a;
 
             episodes = _context.Episodes
+           
                 .Include(c => c.Season)
                 .Include(c=>c.Serie)
                 .AsNoTracking();
@@ -127,11 +128,13 @@ namespace EventStreamingPlatform.Controllers
             string query = "SELECT * FROM Episode WHERE EpisodeId = {0}";
             var episode = await _context.Episodes
                  .FromSqlRaw(query, id)
+        .Include(t => t.Comments)
+                .ThenInclude(c => c.Author)
                 .Include(c => c.Season)
                 .Include(c => c.Serie)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
-
+           
             if (episode == null)
             {
                 return NotFound();
@@ -154,10 +157,11 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EpisodeId,Name,Description,SeasonId,SerieId,RowVersion")] Episode episode)
+        public async Task<IActionResult> Create([Bind("EpisodeId,Name,Description,LastUpdatedDate,SeasonId,SerieId,RowVersion")] Episode episode)
         {
             if (ModelState.IsValid)
             {
+                episode.LastUpdatedDate = DateTime.Now;
                 _context.Add(episode);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -166,7 +170,7 @@ namespace EventStreamingPlatform.Controllers
             PopulateSeriesDropDownList(episode.SerieId);
             return View(episode);
         }
-
+     
         // GET: Genres/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

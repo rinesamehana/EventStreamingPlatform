@@ -42,6 +42,10 @@
             <th  scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["SerieSortParam"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Serie</a>
             </th>
+            <th>Comment</th>
+            <th>
+
+            </th>
             <th>
                 
             </th>
@@ -64,6 +68,13 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Serie.Title)
                 </td>
+                <td>
+                    @foreach (var genre in item.Comments)
+                    {
+                        @genre.Description <br />
+                    }
+                </td>
+                <td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.EpisodeId" class="btn btn-primary">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.EpisodeId" class="btn btn-primary">Details</a> |
