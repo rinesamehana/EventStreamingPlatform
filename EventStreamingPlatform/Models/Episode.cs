@@ -16,8 +16,9 @@ namespace EventStreamingPlatform.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
+        public DateTime RealiseDate { get; set; }
         public byte[] RowVersion { get; set; }
-        public DateTime LastUpdatedDate { get; set; }
+        
         public List<Comment> Comments { get; set; }
 
         

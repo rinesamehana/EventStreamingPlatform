@@ -13,7 +13,7 @@ namespace EventStreamingPlatform.Models
         [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
 
-  
+        
 
         public int? RecomandationId { get; set; }
 

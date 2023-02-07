@@ -63,7 +63,7 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Comments/Create
-        public IActionResult Create(int? id)
+        public IActionResult Create()
         {
            
             return View();
@@ -75,7 +75,7 @@ namespace EventStreamingPlatform.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
        
-        public async Task<IActionResult> Create([Bind("CommentId,Description,CreatedDate,LastUpdatedDate")] Comment comment)
+        public async Task<IActionResult> Create([Bind("CommentId,Description,CreatedDate,LastUpdatedDate")] Comment comment, int ID)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,17 @@ namespace EventStreamingPlatform.Controllers
 
                 comment.AuthorId = authorId;
 
-                var newComment = await _context.Episodes.FirstOrDefaultAsync(p => p.EpisodeId == comment.EpisodeId);
+                var countriesQuery = from d in _context.Episodes
+                                    
+                                     orderby d.Name
+                                     select d.EpisodeId
+                                    ;
+
+                comment.EpisodeId=countriesQuery.FirstOrDefault();
+
+             
+
+                //var newComment = await _context.Episodes.FirstOrDefaultAsync(countriesQuery == comment.EpisodeId);
 
                 //comment = await _context.Comments
                 //   .Include(c => c.Episode)
