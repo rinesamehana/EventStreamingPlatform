@@ -46,9 +46,9 @@ const Movies = () => {
 
                       <div class="title-wrapper">
                         <h3 class="card-title">{film.title}</h3>
-
+                       
                         <time datetime="2021">{film.realiseDate}</time>
-                        <p>{film.language.languageName}</p>
+                        
                       </div>
 
                       <div class="card-meta">

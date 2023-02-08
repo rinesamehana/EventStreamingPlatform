@@ -59,7 +59,7 @@ a:active {
 
 .movie img {
   object-fit: cover;
-  height: 350px;
+  height: 300px;
   max-width: 100%;
 }
 .movie-over {
@@ -74,7 +74,7 @@ a:active {
   font-weight: bold;
   overflow: auto;
   max-height: 100%;
-  padding: 1rem;
+  padding: 0.8rem;
   transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
 }

@@ -13,7 +13,7 @@
     <header>
                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EventStreamingPlatform</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Streaming</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,7 +23,8 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-               
+                        @if (User.IsInRole("Admin"))
+                        {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Genres" asp-action="Index">Genres</a>
                         </li>
@@ -60,15 +61,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Episodes" asp-action="Index">Episode</a>
                         </li>
-                       @* @if (User.IsInRole("Admin")) 
-                        {*@
+                       
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Roless" asp-action="Index">Roles</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Userss" asp-action="Index">Users</a>
                             </li>
-                        @*}*@
+                        } 
+                        @if (User.IsInRole("Admin") || User.IsInRole("User"))
+                        {
+                          <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Comments" asp-action="Index">Comments</a>
+                            </li>
+                        }
                         
                     </ul>
                     <partial name="_LoginPartial" />

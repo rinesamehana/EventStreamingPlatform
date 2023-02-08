@@ -26,8 +26,10 @@ namespace EventStreamingPlatform.Controllers
         public IActionResult GetAll()
         {
 
-            var actors = _context.Films.Include(c => c.Company)
-                  .Include(c => c.Language)
+            var actors = _context.Films
+                 .Include(c => c.Language)
+                .Include(c => c.Company)
+                 
                   .Include(i => i.FilmGenres)
                     .ThenInclude(i => i.Genre)
                         .ThenInclude(i => i.Recomandation)
