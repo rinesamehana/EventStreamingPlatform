@@ -93,10 +93,6 @@
                                         <span class="date-time cell" title="Last Redaction">@comment.LastUpdatedDate.ToString("HH:mm dd/MMM/yyyy")</span>
                                     </span>
                                   
-                               @*     <span class="item-wrap">
-                                        <a href="/Topic/Details/@ViewContext.RouteData.Values["id"]/Comment/Edit/@comment.CommentId" class="btn btn-default">Edit</a>
-                                        <a href="/Topic/Details/@ViewContext.RouteData.Values["id"]/Comment/Delete/@comment.CommentId" class="btn btn-default">Delete</a>
-                                    </span>*@
                                 </div>
                             </div>
                         </div>
@@ -108,19 +104,4 @@
 </div>
    
 </div>
-@*@foreach (var comment in Model.Comments)
-{
-    <div class="form-group">
-        <label asp-for="@comment.CommentId" class="control-label"></label>
-        <input asp-for="@comment.CommentId" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="@comment.Description" class="control-label"></label>
-        <input asp-for="@comment.Description" class="form-control" />
-    </div>
-}*@
-@*<p>
-    <a asp-controller="Comments" asp-action="Create" class="btn btn-default">Add Comment</a>
-</p>
 
- </div>*@
