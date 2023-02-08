@@ -24,9 +24,6 @@ const Header = () => {
               </li>
             
              
-              <li>
-                <a href='/'>Contact</a>
-              </li>
             </ul>
             <button className='toggle' onClick={() => setMobile(!Mobile)}>
               {Mobile ? <i className='fa fa-times'></i> : <i className='fa fa-bars'></i>}

@@ -312,11 +312,9 @@ namespace EventStreamingPlatform.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int?>("SeasonId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("SerieId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("VideoLink")
@@ -864,9 +862,7 @@ namespace EventStreamingPlatform.Migrations
 
                     b.HasOne("EventStreamingPlatform.Models.Serie", "Serie")
                         .WithMany()
-                        .HasForeignKey("SerieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SerieId");
 
                     b.Navigation("Season");
 

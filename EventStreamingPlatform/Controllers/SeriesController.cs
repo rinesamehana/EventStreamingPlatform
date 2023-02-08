@@ -6,6 +6,8 @@ using EventStreamingPlatform.Models.StreamingViewModel;
 using EventStreamingPlatform.Migrations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -428,6 +430,7 @@ namespace EventStreamingPlatform.Controllers
         // POST: Series/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Title, Description,Director, PhotoLink ,CompanyId, LanguageId")] Serie serie, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
           
@@ -472,7 +475,7 @@ namespace EventStreamingPlatform.Controllers
             PopulateAssignedMainActorData(serie);
             return View(serie);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Series/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -557,6 +560,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
             if (id == null)
@@ -693,7 +697,7 @@ namespace EventStreamingPlatform.Controllers
                 }
             }
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Series/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -713,7 +717,7 @@ namespace EventStreamingPlatform.Controllers
 
             return View(serie);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: Series/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventStreamingPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230208181039_requiredFields")]
-    partial class requiredFields
+    [Migration("20230208220420_serieEpis")]
+    partial class serieEpis
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -314,11 +314,9 @@ namespace EventStreamingPlatform.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int?>("SeasonId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("SerieId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("VideoLink")
@@ -866,9 +864,7 @@ namespace EventStreamingPlatform.Migrations
 
                     b.HasOne("EventStreamingPlatform.Models.Serie", "Serie")
                         .WithMany()
-                        .HasForeignKey("SerieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SerieId");
 
                     b.Navigation("Season");
 

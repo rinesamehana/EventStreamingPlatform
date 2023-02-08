@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventStreamingPlatform.Controllers
 {
-   
+    [Authorize(Roles = "Admin")]
     public class UserssController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

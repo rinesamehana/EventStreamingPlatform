@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EventStreamingPlatform.Data;
 using EventStreamingPlatform.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RecomandationsController : Controller
     {
         private readonly ApplicationDbContext _context;

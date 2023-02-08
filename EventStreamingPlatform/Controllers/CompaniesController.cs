@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using EventStreamingPlatform.Data;
 using EventStreamingPlatform.Models;
 using EventStreamingPlatform.Migrations;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -152,6 +154,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("CompanyId,CompanyName,CreatedDate,CompanyDesc,CountryId,CityId")] Company company)
         {
             if (ModelState.IsValid)

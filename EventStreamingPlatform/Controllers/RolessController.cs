@@ -7,7 +7,7 @@ using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class RolessController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
