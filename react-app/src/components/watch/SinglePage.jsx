@@ -3,33 +3,38 @@ import "./style.css"
 import { useParams } from "react-router-dom"
 import { homeData, recommended } from "../../dummyData"
 import Upcomming from "../upcoming/Upcomming"
-
-const SinglePage = () => {
+import axios from "axios";
+const SinglePage = ({match}) => {
   const { id } = useParams()
-  const [item, setItem] = useState(null)
-
+  const [film, setFilm] = useState([]);
   useEffect(() => {
-    let item = homeData.find((item) => item.id === parseInt(id))
-    if (item) {
-      setItem(item)
-    }
-  }, [id])
+    axios
+      .get(`https://localhost:44337/api/films/${match.params.id}`)
+      .then((res) => {
+        console.log(res);
+        setFilm(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+ 
   const [rec, setRec] = useState(recommended)
-
+  console.log(film)
   return (
     <>
-      {item ? (
+      {film ? (
         <>
           <section className='singlePage'>
             <div className='singleHeading'>
-              <h1>{item.name} </h1> <span> | {item.time} | </span> <span> HD </span>
+              <h1>{film.title} </h1> <span> | {film.duration} | </span> <span> HD </span>
             </div>
             <div className='container'>
-              <video src={item.video} controls></video>
+              {/* <video src={item.video} controls></video> */}
               <div className='para'>
-                <h3>Date : {item.date}</h3>
-                <p>{item.desc}</p>
-                <p>Get access to the direct Project Overview with this report. Just by a quick glance, you’ll have an idea of the total tasks allotted to the team, number of milestones given & completed, total Links created for the project and the total time taken by all the users. Each section would elaborate the data further, if chosen.</p>
+                {/* <h3>Date : {item.date}</h3> */}
+                {/* <p>{item.desc}</p> */}
+                <p>{film.description}</p>
                 <p>Get access to the direct Project Overview with this report. Just by a quick glance, you’ll have an idea of the total tasks allotted to the team, number of milestones given & completed, total Links created for the project and the total time taken by all the users. Each section would elaborate the data further, if chosen.</p>
                 <p>Get access to the direct Project Overview with this report. Just by a quick glance, you’ll have an idea of the total tasks allotted to the team, number of milestones given & completed, total Links created for the project and the total time taken by all the users. Each section would elaborate the data further, if chosen.</p>
               </div>
@@ -41,7 +46,7 @@ const SinglePage = () => {
               </div>
             </div>
           </section>
-          <Upcomming items={rec} title='Recommended Movies' />
+          {/* <Upcomming items={rec} title='Recommended Movies' /> */}
         </>
       ) : (
         "no"
