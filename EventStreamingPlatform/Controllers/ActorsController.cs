@@ -29,6 +29,29 @@ namespace EventStreamingPlatform.Controllers
 
             return Json(new { data = actors });
         }
+
+        //public IActionResult GetAll(int? id)
+        //{
+
+        //    if (id == null)
+        //    {
+        //        var actors = _context.Actors.Include(c => c.Gender)
+        //            .Include(c => c.Country)
+        //            .Include(c => c.City).AsNoTracking();
+        //        return Json(new { data = actors });
+        //    }
+        //    else
+        //    {
+
+        //        var actor = _context.Actors.Where(a => a.ActorId == id)
+        //            //Select items in new class to avoid circular reference error
+        //            .Select(a => new Actor { Name = a.Name, LastName = a.LastName }).AsNoTracking();
+        //        return Json(new { data = actor });
+        //    }
+
+
+
+        //}
         // GET: Actors
         public async Task<IActionResult> Index(string sortOrder,
             string currentFilter,

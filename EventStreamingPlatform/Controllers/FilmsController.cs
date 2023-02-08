@@ -68,10 +68,11 @@ namespace EventStreamingPlatform.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["TitleSortParm"] = sortOrder == "Title" ? "Title_desc" : "Title";
             ViewData["CompanySortParm"] = sortOrder == "CompanyName" ? "CompanyName_desc" : "CompanyName";
-            //ViewData["LanguageSortParm"] = sortOrder == "EmailAddress" ? "EmailAddress_desc" : "EmailAddress";
+            ViewData["DurationSortParm"] = sortOrder == "Duration" ? "Duration_desc" : "Duration";
             ViewData["GenresSortParm"] = sortOrder == "Genre" ? "Genre_desc" : "Genre";
-            //ViewData["MainActorsSortParm"] = sortOrder == "Title" ? "Title_desc" : "Title";
-            //ViewData["OtherActorsSortParm"] = sortOrder == "HireDate" ? "HireDate_desc" : "HireDate";
+            ViewData["RatingSortParm"] = sortOrder == "Rating" ? "Rating_desc" : "Rating";
+            ViewData["RealiseDateSortParm"] = sortOrder == "RealiseDate" ? "RealiseDate_desc" : "RealiseDate";
+            ViewData["DirectorSortParm"] = sortOrder == "Director" ? "Director_desc" : "Director";
 
             if (searchString != null)
             {
@@ -92,6 +93,23 @@ namespace EventStreamingPlatform.Controllers
             if (string.IsNullOrEmpty(sortOrder))
             {
                 sortOrder = "Title";
+            }
+
+            else if (string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "Duration";
+            }
+            else if (string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "Rating";
+            }
+            else if (string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "RealiseDate";
+            }
+            else if (string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "Director";
             }
             else if (sortOrder.Equals("CompanyName_desc") || sortOrder.Equals("CompanyName"))
             {
@@ -129,6 +147,7 @@ namespace EventStreamingPlatform.Controllers
                         .ThenInclude(i => i.Actor)
                         .OrderBy(i => i.Title)
                         .Where(s => s.Title.Contains(searchString))
+                   
                         .OrderByDescending(e => EF.Property<object>(e.Company, sortOrder))
                         .ToListAsync();
                     }
@@ -146,6 +165,7 @@ namespace EventStreamingPlatform.Controllers
                        .ThenInclude(i => i.Actor)
                        .OrderBy(i => i.Title)
                        .Where(s => s.Title.Contains(searchString))
+              
                        .ToListAsync();
 
                         films.OrderByDescending(e => EF.Property<object>(e.FilmGenres.AsQueryable().Include(i => i.Genre), sortOrder));
@@ -163,7 +183,8 @@ namespace EventStreamingPlatform.Controllers
                       .Include(c => c.FilmMainActors)
                       .ThenInclude(i => i.Actor)
                       .OrderBy(i => i.Title)
-                      .Where(s => s.Title.Contains(searchString))
+                       .Where(s => s.Title.Contains(searchString))
+                      
                        .OrderByDescending(e => EF.Property<object>(e, sortOrder))
                         .ToListAsync();
                     }
@@ -173,20 +194,21 @@ namespace EventStreamingPlatform.Controllers
                     if (officeAssignment)
                     {
 
-                      films = await _context.Films
-                     .Include(c => c.Company)
-                     .Include(c => c.Language)
-                     .Include(i => i.FilmGenres)
-                     .ThenInclude(i => i.Genre)
-                     .ThenInclude(i => i.Recomandation)
-                      .Include(c => c.FilmActors)
-                     .ThenInclude(i => i.Actor)
-                     .Include(c => c.FilmMainActors)
-                     .ThenInclude(i => i.Actor)
-                     .OrderBy(i => i.Title)
-                     .Where(s => s.Title.Contains(searchString))
-                      .OrderBy(e => EF.Property<object>(e.Title, sortOrder))
-                       .ToListAsync();
+                        films = await _context.Films
+                       .Include(c => c.Company)
+                       .Include(c => c.Language)
+                       .Include(i => i.FilmGenres)
+                       .ThenInclude(i => i.Genre)
+                       .ThenInclude(i => i.Recomandation)
+                        .Include(c => c.FilmActors)
+                       .ThenInclude(i => i.Actor)
+                       .Include(c => c.FilmMainActors)
+                       .ThenInclude(i => i.Actor)
+                       .OrderBy(i => i.Title)
+                        .Where(s => s.Title.Contains(searchString))
+                        
+                        .OrderBy(e => EF.Property<object>(e.Title, sortOrder))
+                         .ToListAsync();
                     }
                     else if (courseAssignment)
                     {
@@ -201,7 +223,9 @@ namespace EventStreamingPlatform.Controllers
                     .Include(c => c.FilmMainActors)
                     .ThenInclude(i => i.Actor)
                     .OrderBy(i => i.Title)
-                    .Where(s => s.Title.Contains(searchString))
+                     .Where(s => s.Title.Contains(searchString))
+                     
+
                       .ToListAsync();
 
                         films.OrderBy(e => EF.Property<object>(e.FilmGenres.AsQueryable().Include(i => i.Genre), sortOrder));
@@ -219,7 +243,8 @@ namespace EventStreamingPlatform.Controllers
                     .Include(c => c.FilmMainActors)
                     .ThenInclude(i => i.Actor)
                     .OrderBy(i => i.Title)
-                    .Where(s => s.Title.Contains(searchString))
+                     .Where(s => s.Title.Contains(searchString))
+                       
 
                         .OrderBy(e => EF.Property<object>(e, sortOrder))
                         .ToListAsync();
@@ -344,10 +369,10 @@ namespace EventStreamingPlatform.Controllers
                 Film film = viewModel.Films.Single(
                     i => i.ID == id.Value);
                 viewModel.Genres = film.FilmGenres.Select(s => s.Genre);
-               //ViewData["Film"] = film.Title;
+                //ViewData["Film"] = film.Title;
             }
 
-            if (genreId != null )
+            if (genreId != null)
             {
                 ViewData["GenreId"] = genreId.Value;
                 var selectedGenre = viewModel.Genres.Where(x => x.GenreId == genreId).Single();
@@ -546,7 +571,7 @@ namespace EventStreamingPlatform.Controllers
             if (await TryUpdateModelAsync<Film>(
                 filmToUpdate,
                 "",
-                i => i.Title, c => c.Description, ch => ch.Duration, ch => ch.Rating, ch => ch.VideoLink, ch => ch.PhotoLink, ch => ch.RealiseDate,c=>c.Director, c => c.CompanyId, c => c.LanguageId))
+                i => i.Title, c => c.Description, ch => ch.Duration, ch => ch.Rating, ch => ch.VideoLink, ch => ch.PhotoLink, ch => ch.RealiseDate, c => c.Director, c => c.CompanyId, c => c.LanguageId))
             {
 
                 UpdateFilmGenre(selectedGenres, selectedActors, selectedMainActors, filmToUpdate);

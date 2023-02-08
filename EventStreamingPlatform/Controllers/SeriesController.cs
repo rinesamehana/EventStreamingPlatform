@@ -5,6 +5,7 @@ using EventStreamingPlatform.Models;
 using EventStreamingPlatform.Models.StreamingViewModel;
 using EventStreamingPlatform.Migrations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Diagnostics;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -37,32 +38,314 @@ namespace EventStreamingPlatform.Controllers
             return Json(new { data = series });
         }
         // GET: Series
-        public async Task<IActionResult> Index(int? id, int? seasonId, int? genreId, int? actorId)
+        public async Task<IActionResult> Index(
+            int? id,
+            int? genreId,
+            int? actorId,
+            int? seasonId,
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
-            var viewModel = new SerieIndexData();
-            viewModel.Seriess = await _context.Series
+            //var viewModel = new FilmIndexData();
+            //viewModel.Films = await _context.Films
+            //      .Include(c => c.Company)
+            //      .Include(c => c.Language)
+            //      .Include(i => i.FilmGenres)
+            //        .ThenInclude(i => i.Genre)
+            //            .ThenInclude(i => i.Recomandation)
+            //        .Include(c => c.FilmActors)
+            //            .ThenInclude(i => i.Actor)
+            //         .Include(c => c.FilmMainActors)
+            //            .ThenInclude(i => i.Actor)
+            //      .OrderBy(i => i.Title)
+            //      .ToListAsync();
+
+
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["TitleSortParm"] = sortOrder == "Title" ? "Title_desc" : "Title";
+            ViewData["CompanySortParm"] = sortOrder == "CompanyName" ? "CompanyName_desc" : "CompanyName";
+            //ViewData["DurationSortParm"] = sortOrder == "Duration" ? "Duration_desc" : "Duration";
+            ViewData["GenresSortParm"] = sortOrder == "Genre" ? "Genre_desc" : "Genre";
+         
+            //ViewData["RealiseDateSortParm"] = sortOrder == "RealiseDate" ? "RealiseDate_desc" : "RealiseDate";
+            ViewData["DirectorSortParm"] = sortOrder == "Director" ? "Director_desc" : "Director";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+            var films = new List<Serie>();
+
+            bool officeAssignment = false;
+            bool courseAssignment = false;
+
+
+            if (string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "Title";
+            }
+
+         
+            else if (string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "Director";
+            }
+            else if (sortOrder.Equals("CompanyName_desc") || sortOrder.Equals("CompanyName"))
+            {
+                officeAssignment = true;
+            }
+            else if (sortOrder.Equals("Genre_desc") || sortOrder.Equals("Genre"))
+            {
+                courseAssignment = true;
+            }
+
+            Debug.WriteLine(sortOrder);
+
+            bool descending = false;
+            if (sortOrder.EndsWith("_desc"))
+            {
+                sortOrder = sortOrder.Substring(0, sortOrder.Length - 5);
+                descending = true;
+            }
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                if (descending)
+                {
+                    if (officeAssignment)
+                    {
+                        films = await _context.Series
+                            .Include(a=>a.Seasons)
+                        .Include(c => c.Company)
+                        .Include(c => c.Language)
+                        .Include(i => i.SerieGenres)
+                        .ThenInclude(i => i.Genre)
+                        .ThenInclude(i => i.Recomandation)
+                         .Include(c => c.SerieActors)
+                        .ThenInclude(i => i.Actor)
+                        .Include(c => c.SerieMainActors)
+                        .ThenInclude(i => i.Actor)
+                        .OrderBy(i => i.Title)
+                        .Where(s => s.Title.Contains(searchString))
+
+                        .OrderByDescending(e => EF.Property<object>(e.Company, sortOrder))
+                        .ToListAsync();
+                    }
+                    else if (courseAssignment)
+                    {
+                        films = await _context.Series
+                            .Include(a => a.Seasons)
+                       .Include(c => c.Company)
+                       .Include(c => c.Language)
+                       .Include(i => i.SerieGenres)
+                       .ThenInclude(i => i.Genre)
+                       .ThenInclude(i => i.Recomandation)
+                        .Include(c => c.SerieActors)
+                       .ThenInclude(i => i.Actor)
+                       .Include(c => c.SerieMainActors)
+                       .ThenInclude(i => i.Actor)
+                       .OrderBy(i => i.Title)
+                       .Where(s => s.Title.Contains(searchString))
+
+                       .ToListAsync();
+
+                        films.OrderByDescending(e => EF.Property<object>(e.SerieGenres.AsQueryable().Include(i => i.Genre), sortOrder));
+                    }
+                    else
+                    {
+                        films = await _context.Series
+                            .Include(a => a.Seasons)
+                      .Include(c => c.Company)
+                      .Include(c => c.Language)
+                      .Include(i => i.SerieGenres)
+                      .ThenInclude(i => i.Genre)
+                      .ThenInclude(i => i.Recomandation)
+                       .Include(c => c.SerieActors)
+                      .ThenInclude(i => i.Actor)
+                      .Include(c => c.SerieMainActors)
+                      .ThenInclude(i => i.Actor)
+                      .OrderBy(i => i.Title)
+                       .Where(s => s.Title.Contains(searchString))
+
+                       .OrderByDescending(e => EF.Property<object>(e, sortOrder))
+                        .ToListAsync();
+                    }
+                }
+                else
+                {
+                    if (officeAssignment)
+                    {
+
+                        films = await _context.Series
+                            .Include(a => a.Seasons)
+                       .Include(c => c.Company)
+                       .Include(c => c.Language)
+                       .Include(i => i.SerieGenres)
+                       .ThenInclude(i => i.Genre)
+                       .ThenInclude(i => i.Recomandation)
+                        .Include(c => c.SerieActors)
+                       .ThenInclude(i => i.Actor)
+                       .Include(c => c.SerieMainActors)
+                       .ThenInclude(i => i.Actor)
+                       .OrderBy(i => i.Title)
+                        .Where(s => s.Title.Contains(searchString))
+
+                        .OrderBy(e => EF.Property<object>(e.Title, sortOrder))
+                         .ToListAsync();
+                    }
+                    else if (courseAssignment)
+                    {
+                        films = await _context.Series.Include(a => a.Seasons)
                     .Include(c => c.Company)
                     .Include(c => c.Language)
-                    .Include(i => i.Seasons)
-                            .ThenInclude(i=>i.Episode)
                     .Include(i => i.SerieGenres)
                     .ThenInclude(i => i.Genre)
-                        .ThenInclude(i => i.Recomandation)
-                    .Include(c => c.SerieActors)
-                        .ThenInclude(i => i.Actor)
-                     .Include(c => c.SerieMainActors)
-                        .ThenInclude(i => i.Actor)
-                  .OrderBy(i => i.Title)
-                  .ToListAsync();
+                    .ThenInclude(i => i.Recomandation)
+                     .Include(c => c.SerieActors)
+                    .ThenInclude(i => i.Actor)
+                    .Include(c => c.SerieMainActors)
+                    .ThenInclude(i => i.Actor)
+                    .OrderBy(i => i.Title)
+                     .Where(s => s.Title.Contains(searchString))
 
-            //if (id != null)
-            //{
-            //    ViewData["SerieId"] = id.Value;
-            //    Serie serie = viewModel.Seriess.Single(
-            //        i => i.SerieId == id.Value);
-            //    await _context.Entry(serie).Collection(x => x.Seasons).LoadAsync();
-            //    ViewData["Serie"] = serie.Title;
-            //}
+
+                      .ToListAsync();
+
+                        films.OrderBy(e => EF.Property<object>(e.SerieGenres.AsQueryable().Include(i => i.Genre), sortOrder));
+                    }
+                    else
+                    {
+                        films = await _context.Series.Include(a => a.Seasons)
+                    .Include(c => c.Company)
+                    .Include(c => c.Language)
+                    .Include(i => i.SerieGenres)
+                    .ThenInclude(i => i.Genre)
+                    .ThenInclude(i => i.Recomandation)
+                     .Include(c => c.SerieActors)
+                    .ThenInclude(i => i.Actor)
+                    .Include(c => c.SerieMainActors)
+                    .ThenInclude(i => i.Actor)
+                    .OrderBy(i => i.Title)
+                     .Where(s => s.Title.Contains(searchString))
+
+
+                        .OrderBy(e => EF.Property<object>(e, sortOrder))
+                        .ToListAsync();
+                    }
+                }
+            }
+            else
+            {
+                if (descending)
+                {
+                    if (officeAssignment)
+                    {
+                        films = await _context.Series.Include(a => a.Seasons)
+                    .Include(c => c.Company)
+                    .Include(c => c.Language)
+                    .Include(i => i.SerieGenres)
+                    .ThenInclude(i => i.Genre)
+                    .ThenInclude(i => i.Recomandation)
+                     .Include(c => c.SerieActors)
+                    .ThenInclude(i => i.Actor)
+                    .Include(c => c.SerieMainActors)
+                    .ThenInclude(i => i.Actor)
+                        .OrderByDescending(e => EF.Property<object>(e.Company, sortOrder))
+                        .ToListAsync();
+                    }
+                    else if (courseAssignment)
+                    {
+                        films = await _context.Series.Include(a => a.Seasons)
+                    .Include(c => c.Company)
+                    .Include(c => c.Language)
+                    .Include(i => i.SerieGenres)
+                    .ThenInclude(i => i.Genre)
+                    .ThenInclude(i => i.Recomandation)
+                     .Include(c => c.SerieActors)
+                    .ThenInclude(i => i.Actor)
+                    .Include(c => c.SerieMainActors)
+                    .ThenInclude(i => i.Actor)
+                            .ToListAsync();
+
+                        films.OrderByDescending(e => EF.Property<object>(e.SerieGenres.AsQueryable().Include(i => i.Genre), sortOrder));
+                    }
+                    else
+                    {
+                        films = await _context.Series.Include(a => a.Seasons)
+                   .Include(c => c.Company)
+                   .Include(c => c.Language)
+                   .Include(i => i.SerieGenres)
+                   .ThenInclude(i => i.Genre)
+                   .ThenInclude(i => i.Recomandation)
+                    .Include(c => c.SerieActors)
+                   .ThenInclude(i => i.Actor)
+                   .Include(c => c.SerieMainActors)
+                   .ThenInclude(i => i.Actor)
+                       .OrderByDescending(e => EF.Property<object>(e, sortOrder))
+                        .ToListAsync();
+                    }
+                }
+                else
+                {
+                    if (officeAssignment)
+                    {
+                        films = await _context.Series.Include(a => a.Seasons)
+                   .Include(c => c.Company)
+                   .Include(c => c.Language)
+                   .Include(i => i.SerieGenres)
+                   .ThenInclude(i => i.Genre)
+                   .ThenInclude(i => i.Recomandation)
+                    .Include(c => c.SerieActors)
+                   .ThenInclude(i => i.Actor)
+                   .Include(c => c.SerieMainActors)
+                   .ThenInclude(i => i.Actor)
+                       .OrderBy(e => EF.Property<object>(e.Company, sortOrder))
+                        .ToListAsync();
+                    }
+                    else if (courseAssignment)
+                    {
+                        films = await _context.Series.Include(a => a.Seasons)
+                    .Include(c => c.Company)
+                    .Include(c => c.Language)
+                    .Include(i => i.SerieGenres)
+                    .ThenInclude(i => i.Genre)
+                    .ThenInclude(i => i.Recomandation)
+                     .Include(c => c.SerieActors)
+                    .ThenInclude(i => i.Actor)
+                    .Include(c => c.SerieMainActors)
+                    .ThenInclude(i => i.Actor)
+                        .ToListAsync();
+
+                        films.OrderBy(e => EF.Property<object>(e.SerieGenres.AsQueryable().Include(i => i.Genre), sortOrder));
+                    }
+                    else
+                    {
+                        films = await _context.Series.Include(a => a.Seasons)
+                     .Include(c => c.Company)
+                     .Include(c => c.Language)
+                     .Include(i => i.SerieGenres)
+                     .ThenInclude(i => i.Genre)
+                     .ThenInclude(i => i.Recomandation)
+                      .Include(c => c.SerieActors)
+                     .ThenInclude(i => i.Actor)
+                     .Include(c => c.SerieMainActors)
+                     .ThenInclude(i => i.Actor)
+                         .OrderBy(e => EF.Property<object>(e, sortOrder))
+                        .ToListAsync();
+                    }
+                }
+            }
+
+            int pageSize = 3;
+            var viewModel = SerieIndexData<Serie>.Create(films, pageNumber ?? 1, pageSize, id);
             if (id != null)
             {
                 ViewData["SerieId"] = id.Value;

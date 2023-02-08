@@ -1,4 +1,4 @@
-﻿@model EventStreamingPlatform.Models.StreamingViewModel.SerieIndexData
+﻿@model EventStreamingPlatform.Models.StreamingViewModel.SerieIndexData<Serie>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,15 +9,42 @@
 <p>
     <a asp-action="Create"   class="btn btn-primary">Create New</a>
 </p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <table class="table">
+            <tr>
+                <th>
+                    Find by name:
+                    <input type="text" id="searchValue" value="@ViewData["CurrentFilter"]" />
+                    <input type="button" value="Search" class="btn btn-success"
+                           onclick="location.href='@Url.Action("Index", "Series", new { id = "", seasonId = ""})?searchString=' + $('#searchValue').val()" />
+
+                </th>
+                <th>
+                    <a class="btn btn-secondary my-2 my-sm-0" href="@Url.Action("Index","Series", new { id = "", seasonId = "", SearchString = "" })">Clear search</a>
+                </th>
+            </tr>
+        </table>
+    </div>
+</form>
 <table class="table table-hover">
     <thead>
         <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Desc</th>
-            <th scope="col">Director</th>
-            <th scope="col">Company</th>
+            <th scope="col">
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Title</a>
+                </th>
+                <th scope="col">Description</th>
+     
+          
+           
+                 <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["DirectorSortParm"]" asp-route-CurrentFilter="@ViewData["CurrentFilter"]">Director</a></th>
+              <th scope="col">
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["CompanySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Company</a>
+                </th>
             <th scope="col">Language</th>
-            <th scope="col">Genres</th>
+              <th scope="col">
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["GenresSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Genres</a>
+                </th>
             <th scope="col">Main Actors</th>
             <th scope="col">Others Actors</th>
             <th scope="col">Season</th>
@@ -67,7 +94,7 @@
                         @actor.Actor.Name @:  @actor.Actor.LastName <br />
                     }
                 </td>
-                <td>
+           <td>
                     @foreach (var genre in item.Seasons)
                     {
                         @genre.Name <br />
@@ -146,4 +173,35 @@
             </tr>
         }
     </table>
+}
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+@if (Model.Genres == null)
+{
+    <a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-dark @prevDisabled">
+        Previous
+    </a>
+    <a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-dark @nextDisabled">
+        Next
+    </a>
+}
+else
+{
+    <a asp-action="Index"
+   asp-route-seasonId=""
+   asp-route-id=""
+   class="btn btn-dark"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]">
+        Clear selection
+    </a>
 }

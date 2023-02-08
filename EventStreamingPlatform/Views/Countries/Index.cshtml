@@ -34,10 +34,11 @@
     <thead>
         <tr>
                 <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["CountryNameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a></th>
-            <th>Population</th>
-                <th scope="col" ><a asp-action="Index" asp-route-sortOrder="@ViewData["LanguageSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Languages</a></th>
-            <th scope="col">Abbreviation</th>
-            <th scope="col">ISO_Code</th>
+                <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["CountryPopulationSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Population</a></th>
+                <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["LanguageSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Languages</a></th>
+                <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["CountryAbbreviationSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Abbreviation</a></th>
+                <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["CountryIsoCodeSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">ISO_Code</a></th>
+         
             <th scope="col"></th>
         </tr>
     </thead>

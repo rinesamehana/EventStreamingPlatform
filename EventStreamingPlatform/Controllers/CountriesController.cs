@@ -38,6 +38,9 @@ namespace EventStreamingPlatform.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["CountryNameSortParm"] = sortOrder == "Name" ? "Name_desc" : "Name";
+            ViewData["CountryPopulationSortParm"] = sortOrder == "Popullation" ? "Popullation_desc" : "Popullation";
+            ViewData["CountryAbbreviationSortParm"] = sortOrder == "Abbreviation" ? "Abbreviation_desc" : "Abbreviation";
+            ViewData["CountryIsoCodeSortParm"] = sortOrder == "ISO_Code" ? "ISO_Code_desc" : "ISO_Code";
             ViewData["LanguageSortParm"] = sortOrder == "LanguageName" ? "LanguageName_desc" : "LanguageName";
 
 
@@ -59,7 +62,19 @@ namespace EventStreamingPlatform.Controllers
             {
                 sortOrder = "Name";
             }
-         
+            else if(string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "Popullation";
+            }
+            else if(string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "Abbreviation";
+            }
+            else if(string.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = "ISO_Code";
+            }
+
             else if (sortOrder.Equals("LanguageName_desc") || sortOrder.Equals("LanguageName"))
             {
                 languages = true;
@@ -84,6 +99,7 @@ namespace EventStreamingPlatform.Controllers
                         .Include(i => i.CountryLanguages)
                             .ThenInclude(i => i.Language)
                         .Where(s => s.Name.Contains(searchString))
+                       
                         .ToListAsync();
 
                         countries.OrderByDescending(e => EF.Property<object>(e.CountryLanguages.AsQueryable().Include(i => i.Language), sortOrder));
@@ -94,6 +110,7 @@ namespace EventStreamingPlatform.Controllers
                         .Include(i => i.CountryLanguages)
                             .ThenInclude(i => i.Language)
                         .Where(s => s.Name.Contains(searchString))
+                        
                         .OrderByDescending(e => EF.Property<object>(e, sortOrder))
                         .ToListAsync();
                     }
@@ -106,6 +123,7 @@ namespace EventStreamingPlatform.Controllers
                         .Include(i => i.CountryLanguages)
                             .ThenInclude(i => i.Language)
                         .Where(s => s.Name.Contains(searchString))
+                        
                         .ToListAsync();
 
                         countries.OrderBy(e => EF.Property<object>(e.CountryLanguages.AsQueryable().Include(i => i.Language), sortOrder));
@@ -116,6 +134,7 @@ namespace EventStreamingPlatform.Controllers
                         .Include(i => i.CountryLanguages)
                             .ThenInclude(i => i.Language)
                         .Where(s => s.Name.Contains(searchString))
+                 
                         .OrderBy(e => EF.Property<object>(e, sortOrder))
                         .ToListAsync();
                     }
