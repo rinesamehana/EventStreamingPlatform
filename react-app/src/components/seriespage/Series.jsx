@@ -3,14 +3,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "./series.css";
 import { Link } from "react-router-dom";
-
-
-
-
+import PopupPage from "./PopupPage";
+import "./popupPage.css";
 
 const Series = () => {
   const [films, setFilms] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);  
+  const [modal , setModal] = useState(false);
   useEffect(() => {
     axios
       .get("https://localhost:44337/api/films")
@@ -24,16 +23,27 @@ const Series = () => {
       });
   }, []);
 
+  const togglePopup = () =>{
+    setModal(!modal)
+}
+  if(modal){
+  document.body.classList.add("active")
+  }else{
+  document.body.classList.remove("active")
+  }
+
+ 
   console.log(films);
 
   return (
     <>
+         
       <section class="top-rated">
         <div class="container">
 
          <br></br>
 
-          <h2 class="h2 section-title">Our Movies</h2>
+          <h2 class="h2 section-title">Our Series</h2>
 
           <ul class="movies-list">
 
@@ -56,8 +66,9 @@ const Series = () => {
                 </div>
 
                 <div class="card-meta">
-                  <div class="badge badge-outline">HD</div>
-
+                  <button  onClick={togglePopup} type={"submit"} class="badge badge-outline button-popup">See more</button>
+                  {/* <div class="badge badge-outline">See more</div> */}
+            
                   <div class="duration">
                     <ion-icon name="time-outline"></ion-icon>
 
@@ -78,6 +89,12 @@ const Series = () => {
 
         </div>
         </section>
+
+        {modal && ( <div className="modal"> 
+                  <div onClick={togglePopup} className="overlay"></div>  
+                        <PopupPage  onClick={togglePopup}/>
+                        </div>
+                  )}
     </>
   );
 };
