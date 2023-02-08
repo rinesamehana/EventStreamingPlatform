@@ -1,9 +1,12 @@
-﻿namespace EventStreamingPlatform.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EventStreamingPlatform.Models
 {
     public class Serie
     {
         public int SerieId { get; set; }
-
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
         public string Title { get; set; }
 
         public string Description { get; set; }

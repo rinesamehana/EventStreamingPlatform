@@ -11,7 +11,7 @@ namespace EventStreamingPlatform.Models
 
         [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
-
+        [Required]
         public string Age { get; set; }
 
         public string Desc { get; set; }

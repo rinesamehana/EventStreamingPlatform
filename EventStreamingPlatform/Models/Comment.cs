@@ -10,6 +10,7 @@ namespace EventStreamingPlatform.Models
         public int CommentId { get; set; }
 
         [Required]
+        [StringLength(150, MinimumLength = 2)]
         public string Description { get; set; }
 
         [Description("Created Date")]

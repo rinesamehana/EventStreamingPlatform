@@ -1,11 +1,14 @@
-﻿namespace EventStreamingPlatform.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EventStreamingPlatform.Models
 {
     public class Country
     {
         public int CountryId { get; set; }
-
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
         public string Name { get; set; }
-
+        [Required]
         public string Abbreviation { get; set; }
 
         public string Popullation { get; set; }

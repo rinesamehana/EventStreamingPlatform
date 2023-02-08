@@ -1,11 +1,14 @@
-﻿namespace EventStreamingPlatform.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EventStreamingPlatform.Models
 {
     public class Actor
     {
         public int ActorId { get; set; }
-
+        [Required]
+        [StringLength(50, MinimumLength =2)]
         public string Name { get; set; }
-
+        [Required]
         public string LastName { get; set; }
 
         public int Age { get; set; }

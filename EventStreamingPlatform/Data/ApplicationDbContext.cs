@@ -100,6 +100,12 @@ namespace EventStreamingPlatform.Data
       .IsRequired(false)
       .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<Season>()
+      .HasOne(i => i.Serie)
+      .WithMany(c => c.Seasons)
+      .IsRequired(false)
+      .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<Company>()
      .HasMany(i => i.Films)
      .WithOne(c => c.Company)
