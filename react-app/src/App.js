@@ -5,6 +5,7 @@ import SinglePage from "./components/watch/SinglePage"
 import Header from "./components/header/Header"
 import Footer from "./components/footer/Footer"
 import Movies from "./components/moviespage/Movies"
+import Series from "./components/seriespage/Series"
 
 
 
@@ -17,6 +18,7 @@ function App() {
           <Route exact path='/' component={HomePage} />
           <Route path='/singlepage/:id' component={SinglePage} exact />
           <Route path='/Movies' component={Movies} />
+          <Route path='/Series' component={Series} />
           
         </Switch>
         <Footer />
