@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Session;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using EventStreamingPlatform.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -36,6 +39,8 @@ builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
 var app = builder.Build();
