@@ -38,12 +38,15 @@ const HomeCard = ({ item: { id, cover, name, rating, time, desc, starring, genre
                 {tags}
               </h4>
             </div>
+           
             <button className='primary-btn'>
               <i className='fas fa-play'></i> PLAY NOW
             </button>
+          
           </div>
+         
           <div className='palyButton row'>
-            <Link to={`/singlepage/${id}`}>
+           
               <button>
                 <div className='img'>
                   <img src='./images/play-button.png' alt='' />
@@ -51,7 +54,7 @@ const HomeCard = ({ item: { id, cover, name, rating, time, desc, starring, genre
                 </div>
                 WATCH TRAILER
               </button>
-            </Link>
+            
           </div>
         </div>
       </div>
