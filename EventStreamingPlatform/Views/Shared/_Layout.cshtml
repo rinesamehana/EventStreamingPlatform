@@ -72,7 +72,7 @@
                         @if (User.IsInRole("Admin") || User.IsInRole("User"))
                         {
                           <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Comments" asp-action="Index">Comments</a>
+                                <a class="nav-link text-dark" asp-area="User" asp-controller="Comments" asp-action="Index">Comments</a>
                             </li>
                         }
                         

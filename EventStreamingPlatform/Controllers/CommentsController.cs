@@ -14,6 +14,8 @@ using EventStreamingPlatform.Migrations;
 
 namespace EventStreamingPlatform.Controllers
 {
+    [Area("User")]
+    
     public class CommentsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,7 +23,7 @@ namespace EventStreamingPlatform.Controllers
 
         public CommentsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _userManager=userManager;   
+            _userManager = userManager;
             _context = context;
         }
         [Route("api/{controller}")]
@@ -30,7 +32,7 @@ namespace EventStreamingPlatform.Controllers
         {
 
             var companies = _context.Comments
-                .Include(a=>a.Film)
+                .Include(a => a.Film)
 
                  .ToList();
 
@@ -69,7 +71,7 @@ namespace EventStreamingPlatform.Controllers
         // GET: Comments/Create
         public IActionResult Create()
         {
-           
+
             return View();
         }
 
@@ -78,7 +80,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-       
+
         public async Task<IActionResult> Create([Bind("CommentId,Description,CreatedDate,LastUpdatedDate")] Comment comment, int ID)
         {
             if (ModelState.IsValid)
@@ -87,22 +89,22 @@ namespace EventStreamingPlatform.Controllers
                 comment.LastUpdatedDate = DateTime.Now;
 
 
-               
+
 
                 string authorId = _userManager.GetUserId(HttpContext.User);
-                
+
 
                 comment.AuthorId = authorId;
 
                 var countriesQuery = from d in _context.Films
-                                    
+
                                      orderby d.Title
                                      select d.ID
                                     ;
 
-                comment.FilmId=countriesQuery.FirstOrDefault();
+                comment.FilmId = countriesQuery.FirstOrDefault();
 
-             
+
 
                 //var newComment = await _context.Episodes.FirstOrDefaultAsync(countriesQuery == comment.EpisodeId);
 
@@ -121,7 +123,7 @@ namespace EventStreamingPlatform.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index", "Films");
             }
-           
+
             return View(comment);
         }
 
@@ -216,14 +218,14 @@ namespace EventStreamingPlatform.Controllers
             {
                 _context.Comments.Remove(comment);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CommentExists(int id)
         {
-          return _context.Comments.Any(e => e.CommentId == id);
+            return _context.Comments.Any(e => e.CommentId == id);
         }
     }
 }

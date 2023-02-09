@@ -43,7 +43,7 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    <form asp-area="User" asp-controller="Comments" asp-action="Delete">
         <input type="hidden" asp-for="CommentId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index" class="btn btn-primary">Back to List</a>
