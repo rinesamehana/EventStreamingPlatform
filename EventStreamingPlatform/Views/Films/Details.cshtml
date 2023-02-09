@@ -78,7 +78,7 @@
     <a asp-action="Edit" asp-route-id="@Model?.ID"  class="btn btn-dark">Edit</a> |
     <a asp-action="Index"  class="btn btn-primary">Back to List</a>
  <p>
-    <a asp-controller="Comments" asp-action="Create" class="btn btn-default">Add Comment</a>
+        <a asp-controller="Comments" asp-area="User" asp-action="Create" class="btn btn-default">Add Comment</a>
 </p>
         <div>
             @foreach (var comment in Model.Comments)

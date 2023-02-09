@@ -6,6 +6,8 @@ using EventStreamingPlatform.Models;
 using EventStreamingPlatform.Models.StreamingViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -227,6 +229,7 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Films/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             var country = new Country();

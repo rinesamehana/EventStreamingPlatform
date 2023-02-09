@@ -134,7 +134,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-       
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("SeasonId,Name,Description,SerieId")] Season season)
         {
             if (ModelState.IsValid)
@@ -148,6 +148,7 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Seasons/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Seasons == null)
@@ -175,7 +176,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("SeasonId,Name,Description,SerieId")] Season season)
         {
             if (id != season.SeasonId)
@@ -205,8 +206,9 @@ namespace EventStreamingPlatform.Controllers
             }
             return View(season);
         }
-       
+
         // GET: Seasons/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Seasons == null)
@@ -227,7 +229,8 @@ namespace EventStreamingPlatform.Controllers
         // POST: Seasons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-      
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Seasons == null)

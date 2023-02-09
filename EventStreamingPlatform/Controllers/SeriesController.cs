@@ -430,7 +430,7 @@ namespace EventStreamingPlatform.Controllers
         // POST: Series/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-    
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Title, Description,Director, PhotoLink ,CompanyId, LanguageId")] Serie serie, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
           
@@ -475,8 +475,9 @@ namespace EventStreamingPlatform.Controllers
             PopulateAssignedMainActorData(serie);
             return View(serie);
         }
-    
+
         // GET: Series/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -560,7 +561,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-     
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
             if (id == null)
@@ -697,8 +698,9 @@ namespace EventStreamingPlatform.Controllers
                 }
             }
         }
-     
+
         // GET: Series/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

@@ -13,7 +13,7 @@ using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
-   
+    
     public class CitiesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -102,6 +102,7 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Cities/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Cities == null)
@@ -119,7 +120,7 @@ namespace EventStreamingPlatform.Controllers
 
             return View(city);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Cities/Create
         public IActionResult Create()
         {
@@ -132,6 +133,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("CityId,Name, CountryId")] City city)
         {
             if (ModelState.IsValid)
@@ -143,7 +145,7 @@ namespace EventStreamingPlatform.Controllers
             PopulateCountryDropDownList(city.CountryId);
             return View(city);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Cities/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -166,6 +168,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditPost(int? id)
         {
             if (id == null)
@@ -223,7 +226,7 @@ namespace EventStreamingPlatform.Controllers
 
             return View(city);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: Cities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

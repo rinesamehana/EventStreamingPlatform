@@ -13,8 +13,10 @@ using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
+    
     public class CompaniesController : Controller
     {
+        
         private readonly ApplicationDbContext _context;
 
         public CompaniesController(ApplicationDbContext context)

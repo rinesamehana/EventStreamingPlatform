@@ -241,6 +241,7 @@ a:active {
 
 .movies-list {
   display: grid;
+  justify-content: center;
   gap: 50px;
 }
 

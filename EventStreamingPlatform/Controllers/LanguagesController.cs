@@ -116,6 +116,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Create([Bind("LanguageId,LanguageName,ISO_Code")] Language language)
         {
             if (ModelState.IsValid)

@@ -5,6 +5,8 @@ using EventStreamingPlatform.Models;
 using EventStreamingPlatform.Models.StreamingViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -433,6 +435,7 @@ namespace EventStreamingPlatform.Controllers
         // POST: Films/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Title, Description,Duration,Rating , VideoLink, PhotoLink, RealiseDate ,Director, CompanyId, LanguageId")] Film film, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
             if (selectedGenres != null)
@@ -477,6 +480,7 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Films/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -557,6 +561,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id, string[] selectedGenres, string[] selectedActors, string[] selectedMainActors)
         {
             if (id == null)
@@ -693,6 +698,7 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Films/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -716,6 +722,7 @@ namespace EventStreamingPlatform.Controllers
         // POST: Films/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             Film film = await _context.Films

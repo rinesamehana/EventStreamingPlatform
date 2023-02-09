@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EventStreamingPlatform.Data;
 using EventStreamingPlatform.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -169,6 +171,7 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Actors/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Actors == null)
@@ -190,6 +193,7 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Actors/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             
@@ -202,6 +206,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ActorId,Name,LastName,Age, Biography, PhotoLink, GenderId, CountryId,CityId")] Actor actor)
         {
             if (ModelState.IsValid)
@@ -216,6 +221,7 @@ namespace EventStreamingPlatform.Controllers
         }
 
         // GET: Actors/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Actors == null)
@@ -238,6 +244,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditPost(int? id)
         {
             if (id == null)
@@ -287,7 +294,7 @@ namespace EventStreamingPlatform.Controllers
             ViewBag.CityId = new SelectList(citiesQuery.AsNoTracking(), "CityId", "Name", selectedCity);
         }
 
-
+        [Authorize(Roles = "Admin")]
         // GET: Actors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -308,7 +315,7 @@ namespace EventStreamingPlatform.Controllers
 
             return View(actor);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: Actors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

@@ -40,7 +40,7 @@ const Movies = () => {
           <div class="container">
             <br></br>
 
-            <h2 class="h2 section-title">Our Movies</h2>
+            <h2 class="h2 section-title">Our Series</h2>
             <ul class="movies-list">
               {loading && (
                 <div className="loading">
