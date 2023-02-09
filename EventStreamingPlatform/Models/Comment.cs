@@ -19,6 +19,10 @@ namespace EventStreamingPlatform.Models
         [Description("Last Updated Date")]
         public DateTime LastUpdatedDate { get; set; }
 
+        [ForeignKey("Film")]
+        public int? FilmId { get; set; }
+        public Film Film { get; set; }
+
         [ForeignKey("Episode")]
         public int? EpisodeId { get; set; }
         public Episode Episode { get; set; }

@@ -30,7 +30,7 @@ namespace EventStreamingPlatform.Controllers
         {
 
             var companies = _context.Comments
-                .Include(a=>a.Episode)
+                .Include(a=>a.Film)
 
                  .ToList();
 
@@ -39,7 +39,7 @@ namespace EventStreamingPlatform.Controllers
         // GET: Comments
         public async Task<IActionResult> Index(int? pageNumber)
         {
-            var applicationDbContext = _context.Comments.Include(c => c.Author).Include(c => c.Episode);
+            var applicationDbContext = _context.Comments.Include(c => c.Author).Include(c => c.Film);
 
             int pageSize = 7;
             return View(await PaginatedList<Comment>.CreateAsync(applicationDbContext.AsNoTracking(), pageNumber ?? 1, pageSize));
@@ -56,7 +56,7 @@ namespace EventStreamingPlatform.Controllers
 
             var comment = await _context.Comments
                 .Include(c => c.Author)
-                .Include(c => c.Episode)
+                .Include(c => c.Film)
                 .FirstOrDefaultAsync(m => m.CommentId == id);
             if (comment == null)
             {
@@ -94,13 +94,13 @@ namespace EventStreamingPlatform.Controllers
 
                 comment.AuthorId = authorId;
 
-                var countriesQuery = from d in _context.Episodes
+                var countriesQuery = from d in _context.Films
                                     
-                                     orderby d.Name
-                                     select d.EpisodeId
+                                     orderby d.Title
+                                     select d.ID
                                     ;
 
-                comment.EpisodeId=countriesQuery.FirstOrDefault();
+                comment.FilmId=countriesQuery.FirstOrDefault();
 
              
 
@@ -119,7 +119,7 @@ namespace EventStreamingPlatform.Controllers
                 _context.Comments.Add(comment);
 
                 _context.SaveChanges();
-                return RedirectToAction("Index", "Episodes");
+                return RedirectToAction("Index", "Films");
             }
            
             return View(comment);
@@ -141,7 +141,7 @@ namespace EventStreamingPlatform.Controllers
                 return NotFound();
             }
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", comment.AuthorId);
-            ViewData["EpisodeId"] = new SelectList(_context.Episodes, "EpisodeId", "EpisodeId", comment.EpisodeId);
+            ViewData["ID"] = new SelectList(_context.Films, "ID", "Title", comment.FilmId);
             return View(comment);
         }
 
@@ -150,7 +150,7 @@ namespace EventStreamingPlatform.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CommentId,Description,CreatedDate,LastUpdatedDate,EpisodeId,AuthorId")] Comment comment)
+        public async Task<IActionResult> Edit(int id, [Bind("CommentId,Description,CreatedDate,LastUpdatedDate,FilmId,AuthorId")] Comment comment)
         {
             if (id != comment.CommentId)
             {
@@ -178,7 +178,7 @@ namespace EventStreamingPlatform.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", comment.AuthorId);
-            ViewData["EpisodeId"] = new SelectList(_context.Episodes, "EpisodeId", "EpisodeId", comment.EpisodeId);
+            ViewData["ID"] = new SelectList(_context.Films, "ID", "Title", comment.FilmId);
             return View(comment);
         }
 
@@ -192,7 +192,7 @@ namespace EventStreamingPlatform.Controllers
 
             var comment = await _context.Comments
                 .Include(c => c.Author)
-                .Include(c => c.Episode)
+                .Include(c => c.Film)
                 .FirstOrDefaultAsync(m => m.CommentId == id);
             if (comment == null)
             {

@@ -139,6 +139,7 @@ namespace EventStreamingPlatform.Controllers
                     {
                         films = await _context.Films
                         .Include(c => c.Company)
+                         .Include(t => t.Comments)
                         .Include(c => c.Language)
                         .Include(i => i.FilmGenres)
                         .ThenInclude(i => i.Genre)
@@ -401,6 +402,8 @@ namespace EventStreamingPlatform.Controllers
             }
 
             var film = await _context.Films
+                .Include(t => t.Comments)
+                .ThenInclude(c => c.Author)
                 .Include(c => c.Company)
                  .Include(c => c.Language)
                 .FirstOrDefaultAsync(m => m.ID == id);

@@ -7,6 +7,11 @@ namespace EventStreamingPlatform.Models
 {
     public class Film
     {
+
+        public Film()
+        {
+            this.Comments = new List<Comment>();
+        }
         public int ID { get; set; }
         [Required]
         public string Title { get; set; }
@@ -28,6 +33,7 @@ namespace EventStreamingPlatform.Models
         public virtual  Company Company { get; set; }
         public int? LanguageId { get; set; }
 
+        public List<Comment> Comments { get; set; }
         public virtual  Language Language { get; set; }
         public List<FilmGenre> FilmGenres { get; set; }=new List<FilmGenre>();
         public ICollection<FilmActor> FilmActors { get; set; }

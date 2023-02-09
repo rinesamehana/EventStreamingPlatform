@@ -112,9 +112,9 @@ namespace EventStreamingPlatform.Data
      .IsRequired(false)
      .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Episode>()
+            modelBuilder.Entity<Film>()
  .HasMany(i => i.Comments)
- .WithOne(c => c.Episode)
+ .WithOne(c => c.Film)
  .IsRequired(false)
  .OnDelete(DeleteBehavior.SetNull);
 

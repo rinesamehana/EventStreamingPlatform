@@ -4,6 +4,7 @@ using EventStreamingPlatform.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventStreamingPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230209195847_filmcomment")]
+    partial class filmcomment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -816,12 +818,12 @@ namespace EventStreamingPlatform.Migrations
 
                     b.HasOne("EventStreamingPlatform.Models.Episode", "Episode")
                         .WithMany("Comments")
-                        .HasForeignKey("EpisodeId");
+                        .HasForeignKey("EpisodeId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("EventStreamingPlatform.Models.Film", "Film")
                         .WithMany("Comments")
-                        .HasForeignKey("FilmId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("FilmId");
 
                     b.Navigation("Author");
 
