@@ -1,10 +1,11 @@
-﻿@model IEnumerable<EventStreamingPlatform.Models.Comment>
+﻿@model PaginatedList<EventStreamingPlatform.Models.Comment>
 
 @{
     ViewData["Title"] = "Index";
 }
+<br />
 
-<h2>Comment</h2>
+<h2>Comments</h2>
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
@@ -13,19 +14,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Description
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
+                CreatedDate
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastUpdatedDate)
+                LastUpdatedDate
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Episode)
+                Episode
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Author)
+                Author
             </th>
             <th></th>
         </tr>
@@ -57,3 +58,22 @@
 }
     </tbody>
 </table>
+@{
+    var prevDisabled = !Model.PreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.NextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex-1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-dark @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex+1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-dark @nextDisabled">
+    Next
+</a>

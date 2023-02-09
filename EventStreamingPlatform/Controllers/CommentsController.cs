@@ -10,6 +10,7 @@ using EventStreamingPlatform.Models;
 using Microsoft.AspNetCore.Identity;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using EventStreamingPlatform.Migrations;
 
 namespace EventStreamingPlatform.Controllers
 {
@@ -36,10 +37,13 @@ namespace EventStreamingPlatform.Controllers
             return Json(new { data = companies });
         }
         // GET: Comments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber)
         {
             var applicationDbContext = _context.Comments.Include(c => c.Author).Include(c => c.Episode);
-            return View(await applicationDbContext.ToListAsync());
+
+            int pageSize = 7;
+            return View(await PaginatedList<Comment>.CreateAsync(applicationDbContext.AsNoTracking(), pageNumber ?? 1, pageSize));
+            //return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Comments/Details/5
