@@ -7,6 +7,7 @@ using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
+    [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class RolessController : Controller
     {
