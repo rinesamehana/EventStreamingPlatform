@@ -13,7 +13,7 @@ using System.Data;
 
 namespace EventStreamingPlatform.Controllers
 {
-    [Authorize(Roles = "Admin")]
+   
     public class CitiesController : Controller
     {
         private readonly ApplicationDbContext _context;

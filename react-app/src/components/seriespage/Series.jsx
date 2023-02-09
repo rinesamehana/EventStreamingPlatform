@@ -1,10 +1,16 @@
 import axios from "axios";
 import React from "react";
+import { data } from "../../dummyData";
 import { useState, useEffect } from "react";
-import "../moviespage/movies.css";
+import "./series.css";
 import { Link } from "react-router-dom";
+import PopupPage from "./PopupPage";
+import "./popupPage.css";
+import { BsChevronDown } from "react-icons/bs";
 const Movies = () => {
-   const [modal , setModal] = useState(false);
+  const [selected, setSelected] = useState(null);
+
+  const [isOpen, setOpen] = useState(false);
   const [series, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -19,90 +25,132 @@ const Movies = () => {
         console.log(err);
       });
   }, []);
-  const togglePopup = () =>{
-    setModal(!modal)
-}
-  if(modal){
-  document.body.classList.add("active")
-  }else{
-  document.body.classList.remove("active")
-  }
-  console.log(series);
+
+  const toggler = (id) => {
+    if (selected === id) {
+      return setSelected(null);
+    }
+    setSelected(id);
+  };
 
   return (
     <>
-      <section class="top-rated">
-        <div class="container">
-          <br></br>
+      <>
+        <section class="top-rated">
+          <div class="container">
+            <br></br>
 
-          <h2 class="h2 section-title">Our Movies</h2>
-          <ul class="movies-list">
-            {loading && (
-              <div className="loading">
-                <img className="rotate" />
-                <h2>Loading...</h2>
-              </div>
-            )}
-            {series.map((film) => {
-              return (
-                <li key={film.serieId}>
-                  <div class="movie-card">
-                    <a href={film.videoLink}>
-                      <figure class="card-banner">
-                        <img src={film.photoLink} alt="Picture Here" />
-                      </figure>
+            <h2 class="h2 section-title">Our Movies</h2>
+            <ul class="movies-list">
+              {loading && (
+                <div className="loading">
+                  <img className="rotate" />
+                  <h2>Loading...</h2>
+                </div>
+              )}
+              {series.map((film) => {
+                return (
+                  <>
+                    <li key={film.serieId}>
+                      <div class="movie-card">
+                        <a href={film.videoLink}>
+                          <figure class="card-banner">
+                            <img src={film.photoLink} alt="Picture Here" />
+                          </figure>
 
-                      <div class="title-wrapper">
-                        <h3 class="card-title">{film.title}</h3>
-                       
-                        {/* <time datetime="2021">{film.realiseDate}</time> */}
-                        
+                          <div class="title-wrapper">
+                            <h3 class="card-title">{film.title}</h3>
+                            <p>
+                              {film.serieGenres.map((d) => {
+                                return <p>{d.genre.name}</p>;
+                              })}
+                            </p>
+                            {/* <time datetime="2021">{film.realiseDate}</time> */}
+                          </div>
+
+                          <div class="movie-over">
+                            <div class="duration">
+                              <div className="container">
+                                <div className="accordion">
+                                  {film.seasons.map((item, index) => (
+                                    <div key={item.seasonId} className="item">
+                                      <div
+                                        className="accordion-header"
+                                        onClick={() => toggler(index)}
+                                      >
+                                        <h3>{item.name}</h3>
+
+                                        <div>
+                                          {selected === index ? (
+                                            <BsChevronDown className="rotate-down" />
+                                          ) : (
+                                            <BsChevronDown className="rotate-up" />
+                                          )}
+                                        </div>
+                                      </div>
+
+                                      <div
+                                        className={
+                                          selected === index
+                                            ? "content show"
+                                            : "contentt"
+                                        }
+                                      >
+                                        {" "}
+                                        <p>Episodes: </p>
+                                        {item.episode.map((ite, index) => (
+                                          <a href={ite.videoLink}>
+                                            <div
+                                              key={item.seasonId}
+                                              className="item"
+                                            >
+                                              <div
+                                                className="accordion-header"
+                                                onClick={() => toggler(index)}
+                                              >
+                                                <h3>{ite.name}</h3>
+
+                                                <p>Watch Now</p>
+
+                                                {/* <div>
+                                              {selected === index ? (
+                                                <BsChevronDown className="rotate-down" />
+                                              ) : (
+                                                <BsChevronDown className="rotate-up" />
+                                              )}
+                                            </div> */}
+                                              </div>
+                                              <div
+                                                className={
+                                                  selected === index
+                                                    ? "content show"
+                                                    : "contentt"
+                                                }
+                                              >
+                                                {item.episode.name}
+                                              </div>
+                                            </div>{" "}
+                                          </a>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <ion-icon name="time-outline"></ion-icon>
+                            </div>
+                          </div>
+                        </a>
                       </div>
-
-                      <div class="card-meta">
-                        <p>
-                          {film.serieGenres.map((d) => {
-                            return <p>{d.genre.name}</p>;
-                          })}
-                        </p>
-                        <div class="duration">
-                          <ion-icon name="time-outline"></ion-icon>
-                <div class="card-meta">
-                  {/* <button  onClick={togglePopup} type={"submit"} class="badge badge-outline button-popup">See more</button> */}
-                  {/* <div class="badge badge-outline">See more</div> */}
-                          {/* <time datetime="PT131M">🎬{film.duration}</time> */}
-                        </div>
-                        </div>
-                        <div class="rating">
-                          <ion-icon name="star"></ion-icon>
-
-                          {/* <data>🌟{film.rating}</data> */}
-                        </div>
-                      </div>
-                      <div className="movie-over">
-                        <h2>Overview</h2>
-                        <p>{film.description}</p>
-                        <p>
-                          {film.serieActors.map((d) => {
-                            return <p>🎭Main Actors: {d.actor.name}</p>;
-                          })}
-                        </p>
-                        <p>
-                          {film.serieActors.map((d) => {
-                            return <p>🎭Other Actors: {d.actor.name}</p>;
-                          })}
-                        </p>
-                        {/* <p>🏭{film.company.companyName}</p> */}
-                        <p>🏭{film.director}</p>
-                      </div>
-                    </a>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </section>
+                    </li>
+                  </>
+                );
+              })}
+            </ul>
+          </div>
+        </section>
+      </>
     </>
   );
 };
